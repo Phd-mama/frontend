@@ -1,9 +1,9 @@
-name: CI/CD Next.js with Vercel
+name: CI/CD with Rome
 
 on:
   push:
     branches:
-      - main 
+      - main
   pull_request:
     branches:
       - main
@@ -16,11 +16,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+            node-version: '16' 
+
       - name: Install dependencies
         run: npm install
 
-      - name: Build Next.js project
+      - name: Run Rome Linting
+        run: npx rome check . --apply
+
+      - name: Run Rome Formatting
+        run: npx rome format
+
+      - name: Build Project
         run: npm run build
 
+      # Deploy ke Vercel
       - name: Deploy to Vercel
         run: vercel --token ${{ secrets.VERCEL_TOKEN }} --prod
