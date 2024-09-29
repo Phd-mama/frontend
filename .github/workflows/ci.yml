@@ -28,7 +28,7 @@ jobs:
         run: npx rome check . --apply || true
 
       - name: Run Rome Formatting
-        run: npx rome format
+        run: npx rome format .
 
       - name: Build Project
         run: npm run build
