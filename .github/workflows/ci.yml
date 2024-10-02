@@ -34,12 +34,10 @@ jobs:
         run: npm run build
 
       - name: Setup SSH Agent
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.KAWUNG_SSH_KEY }}
-        env:
-          SSH_PASSPHRASE: ${{ secrets.KAWUNG_SSH_PASSPHRASE }}
-
+        run: |
+          eval $(ssh-agent -s)
+          echo "${{ secrets.KAWUNG_SSH_PASSPHRASE }}" | ssh-add <(echo "${{ secrets.KAWUNG_SSH_KEY }}")
+      
       - name: SSH to VM and Deploy
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.KAWUNG_USERNAME }}@${{ secrets.KAWUNG_HOST }} -p ${{ secrets.KAWUNG_PORT }} << EOF
