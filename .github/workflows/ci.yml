@@ -28,21 +28,29 @@ jobs:
         run: |
           eval $(ssh-agent -s)
           echo "${{ secrets.KAWUNG_SSH_KEY }}" | tr -d '\r' | ssh-add -
+          echo "SSH Key added to agent."
           ssh-add -L
         env:
           KAWUNG_SSH_KEY: ${{ secrets.KAWUNG_SSH_KEY }}
 
-      - name: SSH to Kawung
+      - name: SSH to Kawung (with logging)
         run: |
-          ssh -o StrictHostKeyChecking=no -p ${{ secrets.KAWUNG_PORT }} ${{ secrets.KAWUNG_USERNAME }}@${{ secrets.KAWUNG_HOST }} << 'EOF'
-          ssh admin@${{ secrets.VM_HOST }} << 'VM_EOF'
+          echo "Starting SSH connection to Kawung..."
+          ssh -v -o StrictHostKeyChecking=no -p ${{ secrets.KAWUNG_PORT }} ${{ secrets.KAWUNG_USERNAME }}@${{ secrets.KAWUNG_HOST }} << 'EOF'
+          echo "Connected to Kawung. Now connecting to VM..."
+          ssh -v admin@${{ secrets.VM_HOST }} << 'VM_EOF'
           cd frontend
+          echo "Pulling latest changes..."
           git pull
+          echo "Installing dependencies..."
           npm install
+          echo "Building project..."
           npm run build
+          echo "Restarting frontend service..."
           pm2 restart frontend
           VM_EOF
           EOF
+          echo "SSH session completed."
         env:
           KAWUNG_USERNAME: ${{ secrets.KAWUNG_USERNAME }}
           KAWUNG_HOST: ${{ secrets.KAWUNG_HOST }}
