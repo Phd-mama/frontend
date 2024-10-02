@@ -31,9 +31,11 @@ jobs:
         run: |
           eval $(ssh-agent -s)
           echo "${{ secrets.KAWUNG_SSH_KEY }}" | tr -d '\r' | ssh-add -
+          echo "${{ secrets.KAWUNG_SSH_PASSPHRASE }}" | ssh-add ~/.ssh/id_rsa
           ssh-add -L
         env:
           KAWUNG_SSH_KEY: ${{ secrets.KAWUNG_SSH_KEY }}
+          KAWUNG_SSH_PASSPHRASE: ${{ secrets.KAWUNG_SSH_PASSPHRASE }}
 
       - name: SSH to Kawung and Deploy to VM
         run: |
