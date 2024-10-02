@@ -26,6 +26,7 @@ jobs:
 
       - name: Setup SSH Key and Add to Agent
         run: |
+          mkdir -p /home/runner/.ssh 
           echo "${{ secrets.KAWUNG_SSH_KEY }}" > /home/runner/.ssh/id_rsa
           chmod 600 /home/runner/.ssh/id_rsa
           eval $(ssh-agent -s)
