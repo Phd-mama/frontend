@@ -1,4 +1,4 @@
-name: CI/CD with Rome
+name: CI/CD to VM
 
 on:
   push:
@@ -33,5 +33,22 @@ jobs:
       - name: Build Project
         run: npm run build
 
-      - name: Deploy to Vercel
-        run: vercel --token ${{ secrets.VERCEL_TOKEN }} --prod
+      - name: Setup SSH Agent
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.KAWUNG_SSH_KEY }}
+
+      - name: SSH to VM and Deploy
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.KAWUNG_USERNAME }}@${{ secrets.KAWUNG_HOST }} -p ${{ secrets.KAWUNG_PORT }} << EOF
+          cd frontend 
+          git pull
+          npm install
+          npm run build
+          pm2 restart frontend  
+          sudo systemctl restart gunicorn
+          EOF
+        env:
+          KAWUNG_USERNAME: ${{ secrets.KAWUNG_USERNAME }}
+          KAWUNG_HOST: ${{ secrets.KAWUNG_HOST }}
+          KAWUNG_PORT: ${{ secrets.KAWUNG_PORT }}
