@@ -31,24 +31,17 @@ jobs:
           chmod 600 /home/runner/.ssh/id_rsa
           eval $(ssh-agent -s)
           ssh-add /home/runner/.ssh/id_rsa
-          ssh-add -L
         env:
           KAWUNG_SSH_KEY: ${{ secrets.KAWUNG_SSH_KEY }}
 
-      - name: SSH to Kawung (with logging)
+      - name: SSH to Kawung and deploy frontend
         run: |
-          echo "Starting SSH connection to Kawung..."
-          ssh -v -o StrictHostKeyChecking=no -p ${{ secrets.KAWUNG_PORT }} ${{ secrets.KAWUNG_USERNAME }}@${{ secrets.KAWUNG_HOST }} << 'EOF'
-          echo "Connected to Kawung. Now connecting to VM..."
-          ssh -v admin@${{ secrets.VM_HOST }} << 'VM_EOF'
+          ssh -o StrictHostKeyChecking=no -p ${{ secrets.KAWUNG_PORT }} ${{ secrets.KAWUNG_USERNAME }}@${{ secrets.KAWUNG_HOST }} << 'EOF'
+          ssh admin@${{ secrets.VM_HOST }} << 'VM_EOF'
           cd frontend
-          echo "Pulling latest changes..."
           git pull
-          echo "Installing dependencies..."
           npm install
-          echo "Building project..."
           npm run build
-          echo "Restarting frontend service..."
           pm2 restart frontend
           VM_EOF
           EOF
