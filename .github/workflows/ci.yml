@@ -24,11 +24,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Setup SSH Agent with Key
+      - name: Setup SSH Key and Add to Agent
         run: |
+          echo "${{ secrets.KAWUNG_SSH_KEY }}" > /home/runner/.ssh/id_rsa
+          chmod 600 /home/runner/.ssh/id_rsa
           eval $(ssh-agent -s)
-          echo "${{ secrets.KAWUNG_SSH_KEY }}" | tr -d '\r' | ssh-add -
-          echo "SSH Key added to agent."
+          ssh-add /home/runner/.ssh/id_rsa
           ssh-add -L
         env:
           KAWUNG_SSH_KEY: ${{ secrets.KAWUNG_SSH_KEY }}
@@ -50,7 +51,6 @@ jobs:
           pm2 restart frontend
           VM_EOF
           EOF
-          echo "SSH session completed."
         env:
           KAWUNG_USERNAME: ${{ secrets.KAWUNG_USERNAME }}
           KAWUNG_HOST: ${{ secrets.KAWUNG_HOST }}
