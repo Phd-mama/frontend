@@ -7,7 +7,6 @@ on:
   pull_request:
     branches:
       - main
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,16 +26,17 @@ jobs:
       - name: Install sshpass
         run: sudo apt-get install sshpass
 
-      - name: Setup SSH Agent with Key
+      - name: Setup SSH Agent with Key and Passphrase
         run: |
           eval $(ssh-agent -s)
-          echo "${{ secrets.KAWUNG_SSH_KEY }}" | tr -d '\r' | ssh-add -
+          echo "${{ secrets.KAWUNG_SSH_PASSPHRASE }}" | ssh-add <(echo "${{ secrets.KAWUNG_SSH_KEY }}") >/dev/null
         env:
           KAWUNG_SSH_KEY: ${{ secrets.KAWUNG_SSH_KEY }}
+          KAWUNG_SSH_PASSPHRASE: ${{ secrets.KAWUNG_SSH_PASSPHRASE }}
 
       - name: SSH to Kawung and Deploy to VM
         run: |
-          sshpass -p "${{ secrets.KAWUNG_SSH_PASSWORD }}" ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p ${{ secrets.KAWUNG_PORT }} ${{ secrets.KAWUNG_USERNAME }}@${{ secrets.KAWUNG_HOST }} << 'EOF'
+          sshpass -p "${{ secrets.KAWUNG_SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.KAWUNG_PORT }} ${{ secrets.KAWUNG_USERNAME }}@${{ secrets.KAWUNG_HOST }} << 'EOF'
           
           sshpass -p "${{ secrets.VM_SSH_PASSWORD }}" ssh admin@${{ secrets.VM_HOST }} << 'VM_EOF'
 
