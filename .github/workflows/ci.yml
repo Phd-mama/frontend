@@ -24,29 +24,22 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run Rome Linting
-        run: npx rome check . --apply || true
-
-      - name: Run Rome Formatting
-        run: npx rome format .
-
-      - name: Build Project
-        run: npm run build
+      - name: Install sshpass
+        run: sudo apt-get install sshpass
 
       - name: Setup SSH Agent
-        run: |
-          eval $(ssh-agent -s)
-          echo "${{ secrets.KAWUNG_SSH_PASSPHRASE }}" | ssh-add <(echo "${{ secrets.KAWUNG_SSH_KEY }}")
-      
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.KAWUNG_SSH_KEY }}
+
       - name: SSH to VM and Deploy
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.KAWUNG_USERNAME }}@${{ secrets.KAWUNG_HOST }} -p ${{ secrets.KAWUNG_PORT }} << EOF
-          cd frontend 
+          sshpass -p "${{ secrets.KAWUNG_SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.KAWUNG_USERNAME }}@${{ secrets.KAWUNG_HOST }} -p ${{ secrets.KAWUNG_PORT }} << EOF
+          cd frontend
           git pull
           npm install
           npm run build
-          pm2 restart frontend  
-          sudo systemctl restart gunicorn
+          pm2 restart frontend
           EOF
         env:
           KAWUNG_USERNAME: ${{ secrets.KAWUNG_USERNAME }}
