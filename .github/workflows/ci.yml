@@ -27,10 +27,19 @@ jobs:
       - name: Install sshpass
         run: sudo apt-get install sshpass
 
+      - name: Setup SSH Agent with Key
+        run: |
+          eval $(ssh-agent -s)
+          echo "${{ secrets.KAWUNG_SSH_KEY }}" | tr -d '\r' | ssh-add -
+        env:
+          KAWUNG_SSH_KEY: ${{ secrets.KAWUNG_SSH_KEY }}
+
       - name: SSH to Kawung and Deploy to VM
         run: |
-          sshpass -p "${{ secrets.KAWUNG_SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -o PubkeyAuthentication=no -t -p ${{ secrets.KAWUNG_PORT }} ${{ secrets.KAWUNG_USERNAME }}@${{ secrets.KAWUNG_HOST }} << 'EOF'
-          sshpass -p "${{ secrets.VM_SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -o PubkeyAuthentication=no -t admin@${{ secrets.VM_HOST }} << 'VM_EOF'
+          sshpass -p "${{ secrets.KAWUNG_SSH_PASSWORD }}" ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p ${{ secrets.KAWUNG_PORT }} ${{ secrets.KAWUNG_USERNAME }}@${{ secrets.KAWUNG_HOST }} << 'EOF'
+          
+          sshpass -p "${{ secrets.VM_SSH_PASSWORD }}" ssh admin@${{ secrets.VM_HOST }} << 'VM_EOF'
+
           cd frontend
           git pull
           npm install
