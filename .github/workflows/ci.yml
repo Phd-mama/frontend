@@ -37,6 +37,8 @@ jobs:
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.KAWUNG_SSH_KEY }}
+        env:
+          SSH_PASSPHRASE: ${{ secrets.KAWUNG_SSH_PASSPHRASE }}
 
       - name: SSH to VM and Deploy
         run: |
