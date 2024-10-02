@@ -27,21 +27,22 @@ jobs:
       - name: Install sshpass
         run: sudo apt-get install sshpass
 
-      - name: Setup SSH Agent
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.KAWUNG_SSH_KEY }}
-
-      - name: SSH to VM and Deploy
+      - name: SSH to Kawung and Deploy to VM
         run: |
-          sshpass -p "${{ secrets.KAWUNG_SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.KAWUNG_USERNAME }}@${{ secrets.KAWUNG_HOST }} -p ${{ secrets.KAWUNG_PORT }} << EOF
-          cd frontend
+          sshpass -p "${{ secrets.KAWUNG_SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.KAWUNG_PORT }} ${{ secrets.KAWUNG_USERNAME }}@${{ secrets.KAWUNG_HOST }} << 'EOF'
+          sshpass -p "${{ secrets.VM_SSH_PASSWORD }}" ssh admin@${{ secrets.VM_HOST }} << 'VM_EOF'
+          cd /path/to/your/frontend
           git pull
           npm install
           npm run build
           pm2 restart frontend
+
+          VM_EOF
           EOF
         env:
           KAWUNG_USERNAME: ${{ secrets.KAWUNG_USERNAME }}
           KAWUNG_HOST: ${{ secrets.KAWUNG_HOST }}
           KAWUNG_PORT: ${{ secrets.KAWUNG_PORT }}
+          KAWUNG_SSH_PASSWORD: ${{ secrets.KAWUNG_SSH_PASSWORD }}
+          VM_SSH_PASSWORD: ${{ secrets.VM_SSH_PASSWORD }}
+          VM_HOST: ${{ secrets.VM_HOST }}
