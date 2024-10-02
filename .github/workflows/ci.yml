@@ -29,9 +29,9 @@ jobs:
 
       - name: SSH to Kawung and Deploy to VM
         run: |
-          sshpass -p "${{ secrets.KAWUNG_SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.KAWUNG_PORT }} ${{ secrets.KAWUNG_USERNAME }}@${{ secrets.KAWUNG_HOST }} << 'EOF'
-          sshpass -p "${{ secrets.VM_SSH_PASSWORD }}" ssh admin@${{ secrets.VM_HOST }} << 'VM_EOF'
-          cd /path/to/your/frontend
+          sshpass -p "${{ secrets.KAWUNG_SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -o PubkeyAuthentication=no -t -p ${{ secrets.KAWUNG_PORT }} ${{ secrets.KAWUNG_USERNAME }}@${{ secrets.KAWUNG_HOST }} << 'EOF'
+          sshpass -p "${{ secrets.VM_SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -o PubkeyAuthentication=no -t admin@${{ secrets.VM_HOST }} << 'VM_EOF'
+          cd frontend
           git pull
           npm install
           npm run build
