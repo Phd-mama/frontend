@@ -31,14 +31,15 @@ jobs:
         run: |
           eval $(ssh-agent -s)
           echo "${{ secrets.KAWUNG_SSH_PASSPHRASE }}" | ssh-add <(echo "${{ secrets.KAWUNG_SSH_KEY }}") >/dev/null
+          ssh-add -L
         env:
           KAWUNG_SSH_KEY: ${{ secrets.KAWUNG_SSH_KEY }}
           KAWUNG_SSH_PASSPHRASE: ${{ secrets.KAWUNG_SSH_PASSPHRASE }}
 
       - name: SSH to Kawung and Deploy to VM
         run: |
-          sshpass -p "${{ secrets.KAWUNG_SSH_PASSWORD }}" ssh -o PubkeyAuthentication=no -o StrictHostKeyChecking=no -t -p ${{ secrets.KAWUNG_PORT }} ${{ secrets.KAWUNG_USERNAME }}@${{ secrets.KAWUNG_HOST }} << 'EOF'
-          sshpass -p "${{ secrets.VM_SSH_PASSWORD }}" ssh -o PubkeyAuthentication=no -o StrictHostKeyChecking=no -t admin@${{ secrets.VM_HOST }} << 'VM_EOF'
+          sshpass -p "${{ secrets.KAWUNG_SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.KAWUNG_PORT }} ${{ secrets.KAWUNG_USERNAME }}@${{ secrets.KAWUNG_HOST }} << 'EOF'
+          sshpass -p "${{ secrets.VM_SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no admin@${{ secrets.VM_HOST }} << 'VM_EOF'
           cd frontend
           git pull
           npm install
