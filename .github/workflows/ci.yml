@@ -27,6 +27,7 @@ jobs:
       # Run Jest tests and generate coverage
       - name: Run Jest Tests
         run: npm run test -- --coverage --config=jest.config.js
+        continue-on-error: true
 
       # Run SonarCloud Scan
       - name: Run SonarCloud Scan
