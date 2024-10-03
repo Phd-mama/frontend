@@ -1,4 +1,4 @@
-import { GET } from '../api/experts/route'; 
+import { GET } from '../src/app/api/experts/route'; 
 import { NextResponse } from 'next/server';
 import fetchMock from 'jest-fetch-mock';
 
