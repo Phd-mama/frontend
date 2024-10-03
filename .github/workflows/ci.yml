@@ -28,7 +28,12 @@ jobs:
       - name: Run Jest Tests
         run: npm run test -- --coverage --config=jest.config.js
         continue-on-error: true
-
+      # Set up Java 17 (for SonarQube Scanner)
+      - name: Set up Java 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
       # Run SonarCloud Scan
       - name: Run SonarCloud Scan
         run: |
