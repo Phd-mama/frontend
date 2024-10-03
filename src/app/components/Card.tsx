@@ -1,15 +1,6 @@
 import { FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
 import Image from "next/image";
-
-interface Expert {
-	name: string;
-	bio: string;
-	expertise: string;
-	photo_url?: string;
-	instagram?: string;
-	linkedin?: string;
-	twitter?: string;
-}
+import { Expert } from "../types/expert";
 
 interface CardProps {
 	expert: Expert;
