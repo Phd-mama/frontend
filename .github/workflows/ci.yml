@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      - development
   pull_request:
     branches:
       - main
+      - development
 
 jobs:
   build:
@@ -53,6 +55,7 @@ jobs:
           KAWUNG_SSH_KEY: ${{ secrets.KAWUNG_SSH_KEY }}
 
       - name: SSH to Kawung and deploy frontend
+        if: github.ref == 'refs/heads/main'
         run: |
           ssh -o StrictHostKeyChecking=no -p ${{ secrets.KAWUNG_PORT }} ${{ secrets.KAWUNG_USERNAME }}@${{ secrets.KAWUNG_HOST }} << 'EOF'
           ssh admin@${{ secrets.VM_HOST }} << 'VM_EOF'
