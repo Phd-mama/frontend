@@ -1,4 +1,4 @@
-name: CI/CD to VM
+name: CI/CD to VM with SonarCloud
 
 on:
   push:
@@ -23,6 +23,22 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      # Run Jest tests and generate coverage
+      - name: Run Jest Tests
+        run: npm run test -- --coverage --config=jest.config.js
+
+      # Run SonarCloud Scan
+      - name: Run SonarCloud Scan
+        run: |
+          npm install -g sonar-scanner
+          sonar-scanner \
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
+            -Dsonar.organization=${{ secrets.SONAR_ORG }} \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
 
       - name: Setup SSH Key and Add to Agent
         run: |
