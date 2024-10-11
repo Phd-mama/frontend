@@ -16,7 +16,7 @@ export default async function ExplorePage() {
   let error: string | undefined;
 
   try {
-    const response = await fetch("api/experts/", {
+    const response = await fetch("http://127.0.0.1:8000/api/experts/", {
       cache: "no-store",
     });
 
