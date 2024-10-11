@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
 	try {
-		const res = await fetch("https://puanpakar.cs.ui.ac.id/api/experts/");
+		const res = await fetch("api/experts/");
 		const data = await res.json();
 		return NextResponse.json(data);
 	} catch (error) {

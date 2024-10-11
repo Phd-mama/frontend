@@ -16,7 +16,7 @@ export default async function ExplorePage() {
   let error: string | undefined;
 
   try {
-    const response = await fetch("https://puanpakar.cs.ui.ac.id/api/experts/", {
+    const response = await fetch("api/experts/", {
       cache: "no-store",
     });
 
