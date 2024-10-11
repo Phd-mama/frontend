@@ -1,40 +1,14 @@
-"use client";
-
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { BiUserCircle } from "react-icons/bi";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { Expert } from "../types/expert";
 
-const ExplorePage: React.FC = () => {
-  const [experts, setExperts] = useState<Expert[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [tags, setTags] = useState("");
-  const [afiliasi, setAfiliasi] = useState("");
-
-  useEffect(() => {
-    const fetchExperts = async () => {
-      try {
-        const response = await fetch("/api/experts");
-        const data = await response.json();
-        setExperts(data);
-      } catch (error) {
-        console.error("Error fetching experts data:", error);
-      }
-    };
-    fetchExperts();
-  }, []);
-
-  const filteredExperts = experts.filter((expert) => {
-    return (
-      (searchTerm === "" || expert.name.toLowerCase().includes(searchTerm.toLowerCase())) &&
-      (tags === "" || expert.expertise.toLowerCase().includes(tags.toLowerCase())) &&
-      (afiliasi === "" || (expert.bio ?? "").toLowerCase().includes(afiliasi.toLowerCase()))
-    );
-  });
+export default async function ExplorePage() {
+  const response = await fetch('https://puanpakar.cs.ui.ac.id/api/experts/', { cache: 'no-store' });
+  const experts: Expert[] = await response.json();
 
   return (
     <div className="bg-white text-black min-h-screen flex flex-col">
@@ -48,22 +22,16 @@ const ExplorePage: React.FC = () => {
               type="text"
               placeholder="Search by name"
               className="w-full md:w-1/3 p-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-red-400 outline-none transition-all"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
             />
             <input
               type="text"
               placeholder="Filter by tags"
               className="w-full md:w-1/4 p-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-red-400 outline-none transition-all"
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
             />
             <input
               type="text"
               placeholder="Filter by affiliation"
               className="w-full md:w-1/4 p-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-red-400 outline-none transition-all"
-              value={afiliasi}
-              onChange={(e) => setAfiliasi(e.target.value)}
             />
           </div>
         </div>
@@ -72,8 +40,8 @@ const ExplorePage: React.FC = () => {
       {/* Expert Cards */}
       <section className="bg-gray-50 py-16 flex-grow">
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-6 md:px-12">
-          {filteredExperts.length > 0 ? (
-            filteredExperts.map((expert) => (
+          {experts.length > 0 ? (
+            experts.map((expert) => (
               <Link
                 key={expert.id}
                 href={`/explore/${expert.id}`}
@@ -128,6 +96,4 @@ const ExplorePage: React.FC = () => {
       <Footer />
     </div>
   );
-};
-
-export default ExplorePage;
+}
