@@ -71,3 +71,8 @@ jobs:
           KAWUNG_HOST: ${{ secrets.KAWUNG_HOST }}
           KAWUNG_PORT: ${{ secrets.KAWUNG_PORT }}
           VM_HOST: ${{ secrets.VM_HOST }}
+
+      - name: Build project
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+        run: npm run build

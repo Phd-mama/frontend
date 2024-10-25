@@ -6,8 +6,8 @@ import { FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
 
 export default async function ExpertProfilePage({ params }: { params: { id: string } }) {
   const { id } = params;
-  const res = await fetch(`https://puanpakar.cs.ui.ac.id/api/experts/${id}`, { cache: 'no-store' });
-
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/experts/${id}`, { cache: 'no-store' });
+  
   if (!res.ok) {
     return <div>Profile not found</div>;
   }
