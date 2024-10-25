@@ -3,21 +3,54 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import FormField from "../components/FormField"; 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const RegisterPage: React.FC = () => {
   const router = useRouter();
   const [fullName, setFullName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
 
-  const handleRegister = (e: React.FormEvent) => {
+  const validateForm = () => {
+    if (!fullName || !username || !email || !password || !repeatPassword) {
+      toast.error("All fields are required!");
+      return false;
+    }
+    if (password !== repeatPassword) {
+      toast.error("Passwords do not match!");
+      return false;
+    }
+    return true;
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === repeatPassword) {
-      console.log({ fullName, email, password });
-      router.push("/login");
-    } else {
-      alert("Password tidak sesuai");
+
+    if (!validateForm()) return;
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/experts/register/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ full_name: fullName, username, email, password, repeat_password: repeatPassword }),
+      });
+
+      if (response.ok) {
+        toast.success("Registration successful!");
+        setTimeout(() => {
+          router.push("/login");
+        }, 2000); 
+      } else {
+        const errData = await response.json();
+        toast.error(errData.error || "Registration failed!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
     }
   };
 
@@ -33,6 +66,13 @@ const RegisterPage: React.FC = () => {
             placeholder="Phdmama"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
+          />
+          <FormField
+            label="Username"
+            type="text"
+            placeholder="Phdmama"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <FormField
             label="Email Address"
@@ -60,6 +100,7 @@ const RegisterPage: React.FC = () => {
           </button>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 };

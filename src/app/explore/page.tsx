@@ -1,34 +1,52 @@
+"use client";
+
 import { FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { BiUserCircle } from "react-icons/bi";
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { Expert } from "../types/expert";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation"; 
+import { Expert } from "../types/expert"; 
 
-interface ExplorePageProps {
-  experts: Expert[] | null;
-  error?: string;
-}
 
-export default async function ExplorePage() {
-  let experts: Expert[] | null = null;
-  let error: string | undefined;
 
-  try {
-    const response = await fetch("http://127.0.0.1:8000/api/experts/", {
-      cache: "no-store",
-    });
+const ExplorePage: React.FC = () => {
+  const [experts, setExperts] = useState<Expert[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
-    if (!response.ok) {
-      console.error("Failed to fetch data:", response.statusText);
-      error = `Failed to fetch data: ${response.statusText}`;
-    } else {
-      experts = await response.json();
-    }
-  } catch (err: any) {
-    console.error("Error fetching experts data:", err.message);
-    error = "An error occurred while fetching data. Please try again later.";
+  useEffect(() => {
+    const fetchExperts = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/api/experts/", {
+          cache: "no-store",
+        });
+        if (!response.ok) {
+          setError(`Failed to fetch data: ${response.statusText}`);
+        } else {
+          const data = await response.json();
+          setExperts(data);
+        }
+      } catch (err: any) {
+        setError("An error occurred while fetching data. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchExperts();
+  }, []);
+
+  if (loading) {
+    // setTimeout(() => {}, 2000); 
+    setTimeout(() => {}, 2000);
+    return (
+        <div className="absolute right-1/2 bottom-1/2  transform translate-x-1/2 translate-y-1/2 ">
+            <div className="border-t-transparent border-solid animate-spin  rounded-full border-blue-400 border-8 h-64 w-64"></div>
+        </div>
+    );
   }
 
   if (error) {
@@ -67,23 +85,16 @@ export default async function ExplorePage() {
     <div className="bg-white text-black min-h-screen flex flex-col">
       <Navbar />
 
-      {/* Search Bar */}
-      <section className="py-12 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            {/* Search bar, tags, and affiliation inputs */}
-          </div>
-        </div>
-      </section>
-
-      {/* Expert Cards */}
-      <section className="bg-gray-50 py-16 flex-grow">
-        <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-6 md:px-12">
+      <section className="bg-gray-100 py-12 px-6 md:px-12 lg:px-20">
+        <h2 className="text-3xl text-center font-semibold text-black mb-10">
+          Find Indonesia&apos;s Leading PhD Woman Experts
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {experts.map((expert) => (
             <Link
               key={expert.id}
               href={`/explore/${expert.id}`}
-              className="bg-white p-8 rounded-lg shadow-lg text-center hover:shadow-2xl transition-shadow duration-300 ease-in-out border border-gray-200"
+              className="bg-white p-8 rounded-lg shadow-lg text-center hover:shadow-2xl transition-shadow duration-300 ease-in-out border border-gray-200 cursor-pointer min-h-[350px]"
             >
               <div>
                 {expert.photo_url ? (
@@ -100,8 +111,27 @@ export default async function ExplorePage() {
                 <h3 className="text-2xl font-medium text-gray-900 mb-2">
                   {expert.name}
                 </h3>
-                <p className="text-gray-600 mb-2">{expert.expertise}</p>
-                <p className="text-sm text-gray-500">{expert.bio}</p>
+
+                {/* Expertise badges */}
+                <div className="mt-3 flex flex-wrap justify-center gap-2">
+                  {(Array.isArray(expert.expertise) ? expert.expertise : [expert.expertise])
+                    .filter(Boolean)
+                    .slice(0, 3)
+                    .map((exp: string | { name: string }, index: number) => (
+                      <span 
+                        key={index} 
+                        className="inline-block bg-pink-200 text-pink-800 px-3 py-1 rounded-full text-xs font-semibold shadow-md"
+                      >
+                        {typeof exp === 'string' ? exp : exp.name}
+                      </span>
+                    ))
+                  }
+                </div>
+
+                <p className="text-sm text-gray-500 mt-4">
+                  {expert.bio ? (expert.bio.length > 50 ? `${expert.bio.slice(0, 50)}...` : expert.bio) : "No bio available"}
+                </p>
+
                 <div className="flex justify-center space-x-4 mt-4">
                   <a
                     href={expert.instagram || "https://instagram.com"}
@@ -131,4 +161,6 @@ export default async function ExplorePage() {
       <Footer />
     </div>
   );
-}
+};
+
+export default ExplorePage;

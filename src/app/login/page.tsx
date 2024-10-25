@@ -3,16 +3,40 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import FormField from "../components/FormField"; 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ email, password });
-    router.push("/explore");
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/experts/login/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("token", data.token);  
+        localStorage.setItem('user_id', data.user.id.toString());
+        toast.success("Login successful!");
+        setTimeout(() => {
+          router.push("/explore");
+        }, 2000);
+      } else {
+        const errData = await response.json();
+        toast.error(errData.error || "Login failed!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+    }
   };
 
   return (
@@ -22,11 +46,11 @@ const LoginPage: React.FC = () => {
         <p className="mt-4">Welcome back! Please login to your account.</p>
         <form onSubmit={handleLogin} className="mt-4">
           <FormField
-            label="Email Address"
-            type="email"
-            placeholder="Phdmama@gmail.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            label="Username"
+            type="text"
+            placeholder="Phdmama"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <FormField
             label="Password"
@@ -35,15 +59,6 @@ const LoginPage: React.FC = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <div className="flex items-center justify-between mb-4">
-            <label className="flex items-center">
-              <input type="checkbox" className="mr-2" />
-              Remember Me
-            </label>
-            <a href="/forgot-password" className="text-sm text-red-500">
-              Forgot Password?
-            </a>
-          </div>
           <button className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-700">
             Login
           </button>
@@ -54,6 +69,7 @@ const LoginPage: React.FC = () => {
           </div>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 };
