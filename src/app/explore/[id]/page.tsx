@@ -1,4 +1,4 @@
-"Use Client"
+"use client"
 
 import { BiUserCircle } from "react-icons/bi";
 import Navbar from '../../components/Navbar';
