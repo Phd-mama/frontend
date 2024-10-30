@@ -124,19 +124,19 @@ export default async function ExpertProfilePage({ params }: { params: { id: stri
   } catch (error) {
     console.error("Error fetching profile:", error); 
 
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-grow bg-gray-50 py-8 px-4 sm:px-8 lg:px-16">
-          <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8">
-            <h1 className="text-3xl font-semibold text-red-600">Profile not found</h1>
-            <p className="text-gray-700 mt-4">
-              We couldn’t retrieve the profile. Please try again later or contact support if the issue persists.
-            </p>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
+    // return (
+    //   <div className="min-h-screen flex flex-col">
+    //     <Navbar />
+    //     <main className="flex-grow bg-gray-50 py-8 px-4 sm:px-8 lg:px-16">
+    //       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8">
+    //         <h1 className="text-3xl font-semibold text-red-600">Profile not found</h1>
+    //         <p className="text-gray-700 mt-4">
+    //           We couldn’t retrieve the profile. Please try again later or contact support if the issue persists.
+    //         </p>
+    //       </div>
+    //     </main>
+    //     <Footer />
+    //   </div>
+    // );
   }
 }
