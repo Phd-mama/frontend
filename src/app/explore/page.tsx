@@ -21,7 +21,7 @@ const ExplorePage: React.FC = () => {
   useEffect(() => {
     const fetchExperts = async () => {
       try {
-        const response = await fetch("https://puanpakar.cs.ui.ac.id/api/experts/", {
+        const response = await fetch("http://127.0.0.1:8000/api/experts/", {
           cache: "no-store",
         });
         if (!response.ok) {

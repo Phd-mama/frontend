@@ -14,7 +14,7 @@ const LoginPage: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("https://puanpakar.cs.ui.ac.id/api/experts/login/", {
+      const response = await fetch("http://127.0.0.1:8000/api/experts/login/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -32,7 +32,7 @@ const RegisterPage: React.FC = () => {
     if (!validateForm()) return;
 
     try {
-      const response = await fetch("https://puanpakar.cs.ui.ac.id/api/experts/register/", {
+      const response = await fetch("http://127.0.0.1:8000/api/experts/register/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
