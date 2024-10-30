@@ -23,7 +23,7 @@ const ProfilePage: React.FC = () => {
           return;
         }
 
-        const response = await fetch(`https://puanpakar.cs.ui.ac.id/api/experts/${userId}/`, {
+        const response = await fetch(`http://127.0.0.1:8000/api/experts/${userId}/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
