@@ -8,7 +8,6 @@ export default async function ExpertProfilePage({ params }: { params: { id: stri
   const { id } = params;
 
   try {
-    const res = await fetch(`https://puanpakar.cs.ui.ac.id/api/experts/${id}`, { cache: 'no-store' });
     const res = await fetch(`https://puanpakar.cs.ui.ac.id/api/experts/${id}`, {
       headers: {
         'Cache-Control': 'no-cache',
