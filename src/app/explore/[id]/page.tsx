@@ -7,6 +7,8 @@ import { FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
 export default async function ExpertProfilePage({ params }: { params: { id: string } }) {
   const { id } = params;
 
+  console.log("Fetching profile for ID:", id); 
+
   try {
     const res = await fetch(`https://puanpakar.cs.ui.ac.id/api/experts/${id}`, {
       headers: {
@@ -15,11 +17,15 @@ export default async function ExpertProfilePage({ params }: { params: { id: stri
       cache: 'no-store',
     });
 
+    console.log("Fetch response status:", res.status); 
+
     if (!res.ok) {
+      console.error(`Failed to fetch profile: ${res.status} ${res.statusText}`);
       throw new Error(`Failed to fetch profile: ${res.status} ${res.statusText}`);
     }
 
     const profile: Profile = await res.json();
+    console.log("Fetched profile data:", profile); 
 
     return (
       <div className="min-h-screen flex flex-col">
@@ -116,7 +122,7 @@ export default async function ExpertProfilePage({ params }: { params: { id: stri
       </div>
     );
   } catch (error) {
-    console.error('Error fetching profile:', error);
+    console.error("Error fetching profile:", error); 
 
     return (
       <div className="min-h-screen flex flex-col">
@@ -124,7 +130,9 @@ export default async function ExpertProfilePage({ params }: { params: { id: stri
         <main className="flex-grow bg-gray-50 py-8 px-4 sm:px-8 lg:px-16">
           <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8">
             <h1 className="text-3xl font-semibold text-red-600">Profile not found</h1>
-            <p className="text-gray-700 mt-4">We couldn’t retrieve the profile. Please try again later or contact support if the issue persists.</p>
+            <p className="text-gray-700 mt-4">
+              We couldn’t retrieve the profile. Please try again later or contact support if the issue persists.
+            </p>
           </div>
         </main>
         <Footer />
