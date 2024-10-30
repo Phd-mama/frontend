@@ -8,7 +8,7 @@ export default async function ExpertProfilePage({ params }: { params: { id: stri
   const { id } = params;
 
   try {
-    const res = await fetch(`http://127.0.0.1:8000/api/experts/${id}`, { cache: 'no-store' });
+    const res = await fetch(`https://puanpakar.cs.ui.ac.id/api/experts/${id}`, { cache: 'no-store' });
 
     if (!res.ok) {
       throw new Error(`Failed to fetch profile: ${res.status} ${res.statusText}`);
