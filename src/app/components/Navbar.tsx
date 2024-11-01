@@ -15,35 +15,36 @@ const Navbar: React.FC = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-	localStorage.removeItem("user_id");
+    localStorage.removeItem("user_id");
     setIsLoggedIn(false);
   };
 
   return (
-    <nav className="bg-red-200 p-4"> 
+    <nav className="bg-pink-300 p-4 shadow-md"> 
       <div className="container mx-auto flex justify-between">
         <Link href="/">
-          <h1 className="text-2xl font-bold text-red-600 cursor-pointer">
-            phdmamaindonesia.DB
-          </h1>
+        <h1 className="text-2xl font-bold text-pink-700 cursor-pointer">
+          phdmamaindonesia
+          <span className="text-xs align">.DB</span> 
+        </h1>
         </Link>
         <div className="flex space-x-6 items-center">
           <Link
             href="https://phdmamaindonesia.com"
-            className="hover:text-black"
+            className="text-gray-800 hover:text-pink-700 font-semibold" 
           >
             Blogs
           </Link>
-          <Link href="/contact" className="hover:text-black">
+          <Link href="/contact" className="text-gray-800 hover:text-pink-700 font-semibold">
             Contacts
           </Link>
-          <Link href="#" className="hover:text-black">
+          <Link href="#" className="text-gray-800 hover:text-pink-700 font-semibold">
             Search
           </Link>
           {isLoggedIn ? (
             <div className="relative">
               <button
-                className="bg-red-500 text-white p-2 rounded-full"
+                className="bg-pink-600 text-white p-2 rounded-full hover:bg-pink-700"  
                 onClick={() => setShowDropdown(!showDropdown)}
               >
                 <FiUser size={24} /> 
@@ -63,7 +64,7 @@ const Navbar: React.FC = () => {
               )}
             </div>
           ) : (
-            <Link href="/login" className="hover:text-black">
+            <Link href="/login" className="text-gray-800 hover:text-pink-700 font-semibold">
               Login
             </Link>
           )}
