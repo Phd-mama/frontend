@@ -13,10 +13,6 @@ export default async function ExpertProfilePage({ params }: { params: { id: stri
 
   try {
     const res = await fetch(`https://puanpakar.cs.ui.ac.id/api/experts/${id}`, {
-      headers: {
-        'Cache-Control': 'no-cache',
-      },
-      cache: 'no-store',
     });
 
     console.log("Fetch response status:", res.status); 
