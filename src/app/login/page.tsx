@@ -21,11 +21,18 @@ const LoginPage: React.FC = () => {
         },
         body: JSON.stringify({ username, password }),
       });
-
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem("token", data.token);  
-        localStorage.setItem('user_id', data.user.id.toString());
+        console.log(data);
+
+        if (data && data.user) {
+          localStorage.setItem("username", data.user.username);  
+          localStorage.setItem("token", data.token);  
+          localStorage.setItem('user_id', data.user.id.toString());
+          localStorage.setItem("role", data.user.role); 
+        } else {
+          throw new Error("Invalid response structure");
+        }
         toast.success("Login successful!");
         setTimeout(() => {
           router.push("/explore");
