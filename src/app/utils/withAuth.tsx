@@ -1,20 +1,25 @@
-"use client";
-
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";  
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const withAuth = (WrappedComponent: React.FC, allowedRoles: string[]) => {
     const AuthComponent: React.FC = (props) => {
+        const [hasMounted, setHasMounted] = useState(false);
         const router = useRouter();
-        const role = typeof window !== "undefined" ? localStorage.getItem("role") : null;
+        const role = typeof window !== 'undefined' ? localStorage.getItem("role") : null;
 
         useEffect(() => {
-            if (typeof window !== "undefined" && (!role || !allowedRoles.includes(role))) {
-                router.push("/unauthorized");  
-            }
-        }, [role, router]);
+            setHasMounted(true); 
 
-        return role && allowedRoles.includes(role) ? <WrappedComponent {...props} /> : null;
+            // Redirect kalo user gapunya akses
+            if (hasMounted && (!role || !allowedRoles.includes(role))) {
+                router.push("/unauthorized");
+            }
+        }, [hasMounted, role, router]);
+
+        // kalo belom mounted, jangan render apa-apa
+        if (!hasMounted) return null;
+
+        return <WrappedComponent {...props} />;
     };
 
     return AuthComponent;

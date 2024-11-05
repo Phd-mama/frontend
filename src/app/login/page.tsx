@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import FormField from "../components/FormField"; 
+import FormField from "../components/FormField";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -23,20 +23,28 @@ const LoginPage: React.FC = () => {
       });
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
 
         if (data && data.user) {
-          localStorage.setItem("username", data.user.username);  
-          localStorage.setItem("token", data.token);  
-          localStorage.setItem('user_id', data.user.id.toString());
-          localStorage.setItem("role", data.user.role); 
+          localStorage.setItem("username", data.user.username);
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("user_id", data.user.id.toString());
+          localStorage.setItem("role", data.user.role);
+
+          // Redirect tergantung role
+          if (data.user.role === "admin") {
+            toast.success("Login successful! Redirecting to Admin Dashboard...");
+            setTimeout(() => {
+              router.push("/dashboardadmin"); // Redirect ke Admin Dashboard
+            }, 2000);
+          } else {
+            toast.success("Login successful!");
+            setTimeout(() => {
+              router.push("/explore"); // Redirect ke explore 
+            }, 2000);
+          }
         } else {
           throw new Error("Invalid response structure");
         }
-        toast.success("Login successful!");
-        setTimeout(() => {
-          router.push("/explore");
-        }, 2000);
       } else {
         const errData = await response.json();
         toast.error(errData.error || "Login failed!");
