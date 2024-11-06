@@ -3,21 +3,25 @@ import { useRouter } from "next/navigation";
 
 const withAuth = (WrappedComponent: React.FC, allowedRoles: string[]) => {
     const AuthComponent: React.FC = (props) => {
-        const [hasMounted, setHasMounted] = useState(false);
+        const [loading, setLoading] = useState(true); 
         const router = useRouter();
         const role = typeof window !== 'undefined' ? localStorage.getItem("role") : null;
 
         useEffect(() => {
-            setHasMounted(true); 
-
-            // Redirect kalo user gapunya akses
-            if (hasMounted && (!role || !allowedRoles.includes(role))) {
+            if (!role || !allowedRoles.includes(role)) {
                 router.push("/unauthorized");
+            } else {
+                setLoading(false); // matiin loading kalo role udah divalidasi
             }
-        }, [hasMounted, role, router]);
+        }, [role, router]);
 
-        // kalo belom mounted, jangan render apa-apa
-        if (!hasMounted) return null;
+        if (loading) {
+            return (
+                <div className="flex justify-center items-center min-h-screen">
+                    <div className="border-t-transparent border-solid animate-spin rounded-full border-pink-500 border-8 h-16 w-16"></div>
+                </div>
+            );
+        }
 
         return <WrappedComponent {...props} />;
     };

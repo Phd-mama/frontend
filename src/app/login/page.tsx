@@ -57,7 +57,7 @@ const LoginPage: React.FC = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-red-500">PhdMama Indonesia DB</h2>
+        <h2 className="text-2xl font-bold text-pink-700">PhdMama Indonesia DB</h2>
         <p className="mt-4">Welcome back! Please login to your account.</p>
         <form onSubmit={handleLogin} className="mt-4">
           <FormField
@@ -74,11 +74,11 @@ const LoginPage: React.FC = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-700">
+          <button className="w-full bg-pink-600 text-white py-2 rounded hover:bg-pink-700">
             Login
           </button>
           <div className="mt-4 flex justify-between">
-            <a href="/register" className="text-sm text-red-500">
+            <a href="/register" className="text-sm text-pink-700">
               Sign Up
             </a>
           </div>
