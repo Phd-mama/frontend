@@ -30,7 +30,7 @@ const ProfilePage: React.FC = () => {
           return;
         }
 
-        const response = await fetch(`https://puanpakar.cs.ui.ac.id/api/experts/${userId}/`, {
+        const response = await fetch(`ttps://puanpakar.cs.ui.ac.id/api/experts/${userId}/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -58,11 +58,12 @@ const ProfilePage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("FormData before submit:", formData); 
     try {
       const token = localStorage.getItem("token");
       const userId = localStorage.getItem("user_id");
-
-      const response = await fetch(`https://puanpakar.cs.ui.ac.id/api/experts/${userId}/`, {
+  
+      const response = await fetch(`http://127.0.0.1:8000/api/experts/${userId}/`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -70,13 +71,18 @@ const ProfilePage: React.FC = () => {
         },
         body: JSON.stringify(formData),
       });
-
+  
       if (response.ok) {
         const updatedProfile = await response.json();
         setProfile(updatedProfile);
         toast.success("Profile updated successfully");
+  
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       } else {
         const errorData = await response.json();
+        console.error("Error details:", errorData);
         toast.error(`Failed to update profile: ${errorData.message || "Unknown error"}`);
       }
     } catch (error) {
@@ -84,7 +90,7 @@ const ProfilePage: React.FC = () => {
       toast.error("Error updating profile");
     }
   };
-
+  
   const renderTabContent = () => {
     switch (activeTab) {
       case "Short Information":
