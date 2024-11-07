@@ -30,7 +30,7 @@ const ProfilePage: React.FC = () => {
           return;
         }
 
-        const response = await fetch(`ttps://puanpakar.cs.ui.ac.id/api/experts/${userId}/`, {
+        const response = await fetch(`https://puanpakar.cs.ui.ac.id/api/experts/${userId}/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -63,7 +63,7 @@ const ProfilePage: React.FC = () => {
       const token = localStorage.getItem("token");
       const userId = localStorage.getItem("user_id");
   
-      const response = await fetch(`http://127.0.0.1:8000/api/experts/${userId}/`, {
+      const response = await fetch(`https://puanpakar.cs.ui.ac.id/api/experts/${userId}/`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
