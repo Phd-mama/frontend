@@ -41,8 +41,8 @@ const ExplorePage: React.FC = () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const filtered = experts.filter((expert) =>
-      (selectedCountry ? expert.location.includes(selectedCountry) : true) &&
-      (selectedExpertise ? expert.expertise.includes(selectedExpertise) : true) &&
+      (selectedCountry ? expert.location?.includes(selectedCountry) : true) &&
+      (selectedExpertise ? expert.expertise?.includes(selectedExpertise) : true) &&
       (searchName ? expert.name.toLowerCase().includes(searchName.toLowerCase()) : true)
     );
     setFilteredExperts(filtered);
