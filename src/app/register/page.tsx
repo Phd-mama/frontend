@@ -6,6 +6,7 @@ import FormField from "../components/FormField";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ReCAPTCHA from "react-google-recaptcha";
+import { useEffect } from "react";
 
 const RegisterPage: React.FC = () => {
   const router = useRouter();
@@ -62,6 +63,10 @@ const RegisterPage: React.FC = () => {
       toast.error("Something went wrong!");
     }
   };
+  
+  useEffect(() => {
+    console.log("RECAPTCHA SITE KEY:", process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY);
+  }, []);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
