@@ -57,7 +57,7 @@ const RegisterPage: React.FC = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-red-500">PhdMama Indonesia DB</h2>
+        <h2 className="text-2xl font-bold text-pink-700">PhdMama Indonesia DB</h2>
         <p className="mt-4">Please fill your information to proceed</p>
         <form onSubmit={handleRegister} className="mt-4">
           <FormField
@@ -95,7 +95,7 @@ const RegisterPage: React.FC = () => {
             value={repeatPassword}
             onChange={(e) => setRepeatPassword(e.target.value)}
           />
-          <button className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-700">
+          <button className="w-full bg-pink-600 text-white py-2 rounded hover:bg-pink-700">
             Register
           </button>
         </form>
