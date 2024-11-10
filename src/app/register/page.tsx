@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import FormField from "../components/FormField"; 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const RegisterPage: React.FC = () => {
   const router = useRouter();
@@ -13,6 +14,7 @@ const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
+  const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
 
   const validateForm = () => {
     if (!fullName || !username || !email || !password || !repeatPassword) {
@@ -23,7 +25,14 @@ const RegisterPage: React.FC = () => {
       toast.error("Passwords do not match!");
       return false;
     }
+    if (!recaptchaValue) {
+      toast.error("Please complete the reCAPTCHA verification!");
+      return false;
+    }
     return true;
+  };
+  const handleRecaptchaChange = (value: string | null) => {
+    setRecaptchaValue(value);
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -37,7 +46,7 @@ const RegisterPage: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ full_name: fullName, username, email, password, repeat_password: repeatPassword }),
+        body: JSON.stringify({ full_name: fullName, username, email, password, repeat_password: repeatPassword, recaptcha: recaptchaValue }),
       });
 
       if (response.ok) {
@@ -95,6 +104,13 @@ const RegisterPage: React.FC = () => {
             value={repeatPassword}
             onChange={(e) => setRepeatPassword(e.target.value)}
           />
+          <div className="flex justify-center items-center mb-4">
+            <ReCAPTCHA
+              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
+              onChange={handleRecaptchaChange}
+              className="mt-4"
+            />
+          </div>
           <button className="w-full bg-pink-600 text-white py-2 rounded hover:bg-pink-700">
             Register
           </button>
