@@ -1,6 +1,7 @@
 "use client";
 
 import { BiUserCircle } from "react-icons/bi";
+import { MdAnnouncement, MdBook, MdEmail, MdEmojiEvents, MdLocationOn, MdWeb, MdWork } from "react-icons/md";
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer'; 
 import { Profile } from "../../types/types"; 
@@ -50,7 +51,7 @@ export default function ExpertProfilePage({ params }: { params: { id: string } }
         <Navbar />
         <main className="flex-grow bg-gray-50 py-8 px-4 sm:px-8 lg:px-16">
           <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8">
-            <h1 className="text-3xl font-semibold text-red-600">Profile not found</h1>
+            <h1 className="text-3xl font-semibold text-pink-600">Profile not found</h1>
             <p className="text-gray-700 mt-4">{error}</p>
           </div>
         </main>
@@ -62,25 +63,57 @@ export default function ExpertProfilePage({ params }: { params: { id: string } }
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="flex-grow bg-gray-50 py-8 px-4 sm:px-8 lg:px-16">
-        <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8">
-          <div className="flex flex-col items-center md:flex-row md:items-start md:space-x-8">
-            {profile?.photo_url ? (
-              <img 
-                src={profile.photo_url} 
-                alt={profile.name} 
-                className="w-48 h-48 rounded-full object-cover mb-4 md:mb-0"
-              />
-            ) : (
-              <BiUserCircle className="w-48 h-48 text-gray-400 mb-4 md:mb-0" />
-            )}
-            <div className="text-center md:text-left">
-              <h1 className="text-4xl font-bold text-gray-800">{profile?.name}</h1>
-              <p className="text-lg text-gray-600">{profile?.position} at {profile?.institution}</p>
-              <p className="mt-2 text-gray-700">{profile?.short_bio}</p>
+      <main className="flex-grow bg-gradient-to-br from-gray-50 to-pink-50 py-8 px-4 sm:px-8 lg:px-16">
+        <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-xl p-8 border-2 border-pink-300">
+          <div className="flex flex-col md:flex-row md:gap-8">
+            {/* Left Side: Avatar and Bio */}
+            <div className="flex-1 flex flex-col items-center md:items-center mb-4 md:mb-0">
+              {profile?.photo_url ? (
+                <img 
+                  src={profile.photo_url} 
+                  alt={profile.name} 
+                  className="w-48 h-48 rounded-full object-cover mb-4 border-4 border-gradient-to-r from-pink-500 to-purple-500"
+                />
+              ) : (
+                <BiUserCircle className="w-48 h-48 text-gray-400 mb-4" />
+              )}
+              <p className="text-pink-600 text-center text-base md:text-lg leading-relaxed max-w-sm">
+                {profile?.short_bio}
+              </p>
+            </div>
+
+            {/* Right Side: Name, Position, Contact, Socials */}
+            <div className="flex-1 md:pl-8 flex flex-col items-center md:items-start">
+              <h1 className="text-4xl font-bold text-pink-600 hover:text-pink-700 transition-colors text-center md:text-left mb-2">
+                {profile?.name}
+              </h1>
+              <p className="text-lg text-pink-600 mb-4 text-center md:text-left">
+                {profile?.position} at {profile?.institution}
+              </p>
+
+              {/* Personal Information */}
+              <ul className="text-gray-700 space-y-2">
+                <li className="flex items-center gap-2 text-pink-600">
+                  <MdEmail className="text-pink-600" /> <strong>Email:</strong> {profile?.contact_info}
+                </li>
+                <li className="flex items-center gap-2 text-pink-600">
+                  <MdLocationOn className="text-pink-600" /> <strong>Location:</strong> {profile?.location || 'Not specified'}
+                </li>
+                <li className="flex items-center gap-2 text-pink-600">
+                  <MdWeb className="text-pink-600" /> 
+                  <strong>Website:</strong>
+                    {profile?.personal_website ? (
+                      <a href={profile.personal_website} target="_blank" rel="noopener noreferrer" className="text-pink-600 ml-1 hover:underline">
+                      {profile.personal_website}
+                      </a>
+                    ) : (
+                      "No Website"
+                    )}
+                </li>
+              </ul>
 
               {/* Expertise badges */}
-              <div className="mt-4 flex flex-wrap justify-center md:justify-start gap-2">
+              <div className="mt-4 flex flex-wrap gap-2 justify-center md:justify-start">
                 {profile?.expertise.map((exp) => (
                   <span 
                     key={exp.id} 
@@ -93,60 +126,98 @@ export default function ExpertProfilePage({ params }: { params: { id: string } }
 
               {/* Social Media Links */}
               <div className="flex space-x-4 mt-6">
-                <a href="https://instagram.com/yourprofile" target="_blank" rel="noopener noreferrer">
-                  <FaInstagram size={24} className="text-gray-600 hover:text-red-500" />
-                </a>
-                <a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener noreferrer">
-                  <FaLinkedin size={24} className="text-gray-600 hover:text-blue-700" />
-                </a>
-                <a href="https://twitter.com/yourprofile" target="_blank" rel="noopener noreferrer">
-                  <FaTwitter size={24} className="text-gray-600 hover:text-blue-400" />
-                </a>
+                {profile?.instagram && (
+                  <a href={profile.instagram} target="_blank" rel="noopener noreferrer">
+                    <FaInstagram size={24} className="text-pink-600 hover:text-red-500 transition-colors" />
+                  </a>
+                )}
+                {profile?.linkedin && (
+                  <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">
+                    <FaLinkedin size={24} className="text-pink-600 hover:text-blue-700 transition-colors" />
+                  </a>
+                )}
+                {profile?.twitter && (
+                  <a href={profile.twitter} target="_blank" rel="noopener noreferrer">
+                    <FaTwitter size={24} className="text-pink-600 hover:text-blue-400 transition-colors" />
+                  </a>
+                )}
               </div>
             </div>
           </div>
-
-          {/* Selected Works */}
+          {/* Selected Projects */}
           <div className="mt-8">
-            <h2 className="text-3xl font-semibold text-red-600">Selected Works</h2>
-            {profile && profile.selected_projects && profile.selected_projects.length > 0 ? (
-              profile.selected_projects.map((project) => (
-                <div key={project.id} className="mt-4">
-                  <h3 className="text-xl font-bold text-gray-700">{project.title}</h3>
-                  <p className="text-gray-600">{project.description}</p>
-                </div>
-              ))
-            ) : (
-              <p className="text-gray-500 mt-2">No projects available</p>
-            )}
+            <h2 className="text-3xl font-semibold text-pink-600 border-b-2 border-pink-300 pb-2 flex items-center gap-2">
+              <MdWork /> Selected Works
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+              {profile && profile.selected_projects && profile.selected_projects.length > 0 ? (
+                profile.selected_projects.map((project, idx) => (
+                  <div key={idx} className="bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                    <h3 className="text-xl font-bold text-pink-600">{project.title}</h3>
+                    <p className="text-pink-600">{project.description}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500 col-span-2">No projects available</p>
+              )}
+            </div>
           </div>
 
           {/* Selected Publications */}
           <div className="mt-8">
-            <h2 className="text-3xl font-semibold text-red-600">Selected Publications</h2>
-            {profile && profile.selected_publications && profile.selected_publications.length > 0 ? (
-              profile.selected_publications.map((publication) => (
-                <div key={publication.id} className="mt-4">
-                  <h3 className="text-xl font-bold text-gray-700">{publication.title}</h3>
-                  <p className="text-gray-600">{publication.description}</p>
-                </div>
-              ))
-            ) : (
-              <p className="text-gray-500 mt-2">No publications available</p>
-            )}
+            <h2 className="text-3xl font-semibold text-pink-600 border-b-2 border-pink-300 pb-2 flex items-center gap-2">
+              <MdBook /> Selected Publications
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+              {profile && profile.selected_publications && profile.selected_publications.length > 0 ? (
+                profile.selected_publications.map((publication, idx) => (
+                  <div key={idx} className="bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                    <h3 className="text-xl font-bold text-pink-600">{publication.title}</h3>
+                    <p className="text-pink-600">{publication.description}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500 col-span-2">No publications available</p>
+              )}
+            </div>
           </div>
 
-          {/* Personal Information */}
+          {/* Awards */}
           <div className="mt-8">
-            <h2 className="text-3xl font-semibold text-red-600">Personal Information</h2>
-            <ul className="text-gray-700 mt-2 space-y-2">
-              <li><strong>Email:</strong> {profile?.contact_info}</li>
-              <li><strong>Location:</strong> {profile?.location || 'Not specified'}</li>
-              <li>
-                <strong>Website:</strong> 
-                <a href={profile?.personal_website} target="_blank" rel="noopener noreferrer" className="text-blue-500 ml-1">Link</a>
-              </li>
-            </ul>
+            <h2 className="text-3xl font-semibold text-pink-600 border-b-2 border-pink-300 pb-2 flex items-center gap-2">
+              <MdEmojiEvents /> Awards
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+              {profile && profile.awards && profile.awards.length > 0 ? (
+                profile.awards.map((award, idx) => (
+                  <div key={idx} className="bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                    <h3 className="text-xl font-bold text-pink-600">Award {idx + 1}</h3>
+                    <p className="text-pink-600">{award.content}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500 col-span-2">No awards available</p>
+              )}
+            </div>
+          </div>
+
+          {/* News */}
+          <div className="mt-8">
+            <h2 className="text-3xl font-semibold text-pink-600 border-b-2 border-pink-300 pb-2 flex items-center gap-2">
+              <MdAnnouncement /> News
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+              {profile && profile.news && profile.news.length > 0 ? (
+                profile.news.map((newsItem, idx) => (
+                  <div key={idx} className="bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                    <h3 className="text-xl font-bold text-pink-600">News {idx + 1}</h3>
+                    <p className="text-pink-600">{newsItem.content}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500 col-span-2">No news available</p>
+              )}
+            </div>
           </div>
         </div>
       </main>
