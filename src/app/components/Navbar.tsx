@@ -72,7 +72,7 @@ const Navbar: React.FC = () => {
             <Link href="/contact" className="text-gray-800 hover:text-pink-700 font-semibold">
               Contacts
             </Link>
-            <Link href="#" className="text-gray-800 hover:text-pink-700 font-semibold">
+            <Link href="/explore" className="text-gray-800 hover:text-pink-700 font-semibold">
               Search
             </Link>
           </div>
@@ -91,7 +91,11 @@ const Navbar: React.FC = () => {
                   </button>
                   {showDropdown && (
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-10">
-                      {role !== "admin" && (
+                      {role === "admin" ? (
+                        <Link href="/dashboardadmin" className="block px-4 py-2 hover:bg-gray-100 rounded-lg">
+                          Dashboard
+                        </Link>
+                      ) : (
                         <Link href="/profile" className="block px-4 py-2 hover:bg-gray-100 rounded-lg">
                           Edit Profile
                         </Link>
