@@ -25,7 +25,7 @@ export interface Expertise {
   }
   
   export interface Profile {
-    id: number;
+    user: number;
     name: string;
     short_bio: string;
     expertise: Expertise[]; // bisa lebih dari satu
@@ -43,6 +43,7 @@ export interface Expertise {
     linkedin: string;
     instagram: string;
     twitter: string;
+    status: string;
   }
   
   

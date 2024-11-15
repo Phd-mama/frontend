@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import FormField from "../components/FormField";
 import { ToastContainer, toast } from "react-toastify";
@@ -10,6 +10,17 @@ const LoginPage: React.FC = () => {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const role = localStorage.getItem("role");
+      toast.info("You are already logged in! Redirecting...");
+      setTimeout(() => {
+        router.push(role === "admin" ? "/dashboardadmin" : "/explore");
+      }, 1500);
+    }
+  }, [router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,18 +41,10 @@ const LoginPage: React.FC = () => {
           localStorage.setItem("user_id", data.user.id.toString());
           localStorage.setItem("role", data.user.role);
 
-          // Redirect tergantung role
-          if (data.user.role === "admin") {
-            toast.success("Login successful! Redirecting to Admin Dashboard...");
-            setTimeout(() => {
-              router.push("/dashboardadmin"); // Redirect ke Admin Dashboard
-            }, 2000);
-          } else {
-            toast.success("Login successful!");
-            setTimeout(() => {
-              router.push("/explore"); // Redirect ke explore 
-            }, 2000);
-          }
+          toast.success("Login successful!");
+          setTimeout(() => {
+            router.push(data.user.role === "admin" ? "/dashboardadmin" : "/explore");
+          }, 2000);
         } else {
           throw new Error("Invalid response structure");
         }

@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import FormField from "../components/FormField"; 
+import FormField from "../components/FormField";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ReCAPTCHA from "react-google-recaptcha";
-import { useEffect } from "react";
 
 const RegisterPage: React.FC = () => {
   const router = useRouter();
@@ -16,6 +15,17 @@ const RegisterPage: React.FC = () => {
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const role = localStorage.getItem("role");
+      toast.info("You are already logged in! Redirecting...");
+      setTimeout(() => {
+        router.push(role === "admin" ? "/dashboardadmin" : "/explore");
+      }, 1500);
+    }
+  }, [router]);
 
   const validateForm = () => {
     if (!fullName || !username || !email || !password || !repeatPassword) {
@@ -32,6 +42,7 @@ const RegisterPage: React.FC = () => {
     }
     return true;
   };
+
   const handleRecaptchaChange = (value: string | null) => {
     setRecaptchaValue(value);
   };
@@ -54,7 +65,7 @@ const RegisterPage: React.FC = () => {
         toast.success("Registration successful!");
         setTimeout(() => {
           router.push("/login");
-        }, 2000); 
+        }, 2000);
       } else {
         const errData = await response.json();
         toast.error(errData.error || "Registration failed!");
@@ -63,7 +74,7 @@ const RegisterPage: React.FC = () => {
       toast.error("Something went wrong!");
     }
   };
-  
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">

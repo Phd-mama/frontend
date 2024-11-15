@@ -4,11 +4,11 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; 
-import { Expert } from "./types/expert"; 
+import { Profile } from "./types/types";  
 import Card from "./components/Card"; 
 
 const LandingPage: React.FC = () => {
-  const [experts, setExperts] = useState<Expert[]>([]);
+  const [experts, setExperts] = useState<Profile[]>([]);
   const router = useRouter(); 
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const LandingPage: React.FC = () => {
       try {
         const response = await fetch("https://puanpakar.cs.ui.ac.id/api/experts/");
         const data = await response.json();
-        setExperts(data.slice(0, 9)); 
+        setExperts(data.slice(0, 9).filter((expert: Profile) => expert.status === "Confirmed")); 
       } catch (error) {
         console.error("Error fetching experts data:", error);
       }
@@ -55,7 +55,7 @@ const LandingPage: React.FC = () => {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"> 
           {experts.map((expert) => (
-            <Card key={expert.id} expert={expert} />
+            <Card key={expert.user} expert={expert} /> 
           ))}
         </div>
         <div className="text-center mt-8">
