@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Profile } from "../types/types";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import ShortInformationForm from "../components/Forms/ShortInformationForm";
 import ExpertiseForm from "../components/Forms/ExpertiseForm";
 import ProjectsForm from "../components/Forms/ProjectsForm";
@@ -147,6 +148,7 @@ const ProfilePage: React.FC = () => {
           </button>
         </div>
       </div>
+      <Footer />
     </>
   );
 };
