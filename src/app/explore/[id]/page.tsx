@@ -6,7 +6,9 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer'; 
 import { Profile } from "../../types/types"; 
 import { FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
+import ConversationLogo from "../../public/assets/images/the_conversations.png"
 import { useEffect, useState } from "react";
+import Image from 'next/image';
 
 export default function ExpertProfilePage({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -51,7 +53,7 @@ export default function ExpertProfilePage({ params }: { params: { id: string } }
         <Navbar />
         <main className="flex-grow bg-gray-50 py-8 px-4 sm:px-8 lg:px-16">
           <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8">
-            <h1 className="text-3xl font-semibold text-pink-600">Profile not found</h1>
+            <h1 className="text-3xl font-semibold text-black">Profile not found</h1>
             <p className="text-gray-700 mt-4">{error}</p>
           </div>
         </main>
@@ -77,33 +79,33 @@ export default function ExpertProfilePage({ params }: { params: { id: string } }
               ) : (
                 <BiUserCircle className="w-48 h-48 text-gray-400 mb-4" />
               )}
-              <p className="text-pink-600 text-center text-base md:text-lg leading-relaxed max-w-sm">
+              <p className="text-black text-center text-base md:text-lg leading-relaxed max-w-sm">
                 {profile?.short_bio}
               </p>
             </div>
 
             {/* Right Side: Name, Position, Contact, Socials */}
             <div className="flex-1 md:pl-8 flex flex-col items-center md:items-start">
-              <h1 className="text-4xl font-bold text-pink-600 hover:text-pink-700 transition-colors text-center md:text-left mb-2">
+              <h1 className="text-4xl font-bold text-black hover:text-pink-700 transition-colors text-center md:text-left mb-2">
                 {profile?.name}
               </h1>
-              <p className="text-lg text-pink-600 mb-4 text-center md:text-left">
+              <p className="text-lg text-black mb-4 text-center md:text-left">
                 {profile?.position} at {profile?.institution}
               </p>
 
               {/* Personal Information */}
               <ul className="text-gray-700 space-y-2">
-                <li className="flex items-center gap-2 text-pink-600">
-                  <MdEmail className="text-pink-600" /> <strong>Email:</strong> {profile?.contact_info}
+                <li className="flex items-center gap-2 text-black">
+                  <MdEmail className="text-black" /> <strong>Email:</strong> {profile?.contact_info}
                 </li>
-                <li className="flex items-center gap-2 text-pink-600">
-                  <MdLocationOn className="text-pink-600" /> <strong>Location:</strong> {profile?.location || 'Not specified'}
+                <li className="flex items-center gap-2 text-black">
+                  <MdLocationOn className="text-black" /> <strong>Location:</strong> {profile?.location || 'Not specified'}
                 </li>
-                <li className="flex items-center gap-2 text-pink-600">
-                  <MdWeb className="text-pink-600" /> 
+                <li className="flex items-center gap-2 text-black">
+                  <MdWeb className="text-black" /> 
                   <strong>Website:</strong>
                     {profile?.personal_website ? (
-                      <a href={profile.personal_website} target="_blank" rel="noopener noreferrer" className="text-pink-600 ml-1 hover:underline">
+                      <a href={profile.personal_website} target="_blank" rel="noopener noreferrer" className="text-black ml-1 hover:underline">
                       {profile.personal_website}
                       </a>
                     ) : (
@@ -117,7 +119,7 @@ export default function ExpertProfilePage({ params }: { params: { id: string } }
                 {profile?.expertise.map((exp) => (
                   <span 
                     key={exp.id} 
-                    className="inline-block bg-pink-200 text-pink-800 px-3 py-1 rounded-full text-xs font-semibold shadow-md mb-2"
+                    className="inline-block bg-pink-200 text-black px-3 py-1 rounded-full text-xs font-semibold shadow-md mb-2"
                   >
                     {exp.name}
                   </span>
@@ -128,33 +130,38 @@ export default function ExpertProfilePage({ params }: { params: { id: string } }
               <div className="flex space-x-4 mt-6">
                 {profile?.instagram && (
                   <a href={profile.instagram} target="_blank" rel="noopener noreferrer">
-                    <FaInstagram size={24} className="text-pink-600 hover:text-red-500 transition-colors" />
+                    <FaInstagram size={24} className="text-pink-500 hover:text-red-500 transition-colors" />
                   </a>
                 )}
                 {profile?.linkedin && (
                   <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">
-                    <FaLinkedin size={24} className="text-pink-600 hover:text-blue-700 transition-colors" />
+                    <FaLinkedin size={24} className="text-blue-700 hover:text-blue-700 transition-colors" />
                   </a>
                 )}
                 {profile?.twitter && (
                   <a href={profile.twitter} target="_blank" rel="noopener noreferrer">
-                    <FaTwitter size={24} className="text-pink-600 hover:text-blue-400 transition-colors" />
+                    <FaTwitter size={24} className="text-blue-500 hover:text-blue-400 transition-colors" />
                   </a>
+                )}
+                {profile?.the_conversation && (
+                    <a href={profile.the_conversation} target="_blank" rel="noopener noreferrer" className="text-red-500 hover:text-gray-500 text-xl">
+                      <Image src={ConversationLogo} alt="The Conversation Indonesia" width={24} height={24} />
+                    </a>
                 )}
               </div>
             </div>
           </div>
           {/* Selected Projects */}
           <div className="mt-8">
-            <h2 className="text-3xl font-semibold text-pink-600 border-b-2 border-pink-300 pb-2 flex items-center gap-2">
+            <h2 className="text-3xl font-semibold text-black border-b-2 border-pink-300 pb-2 flex items-center gap-2">
               <MdWork /> Selected Works
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               {profile && profile.selected_projects && profile.selected_projects.length > 0 ? (
                 profile.selected_projects.map((project, idx) => (
                   <div key={idx} className="bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                    <h3 className="text-xl font-bold text-pink-600">{project.title}</h3>
-                    <p className="text-pink-600">{project.description}</p>
+                    <h3 className="text-xl font-bold text-black">{project.title}</h3>
+                    <p className="text-black">{project.description}</p>
                   </div>
                 ))
               ) : (
@@ -165,15 +172,15 @@ export default function ExpertProfilePage({ params }: { params: { id: string } }
 
           {/* Selected Publications */}
           <div className="mt-8">
-            <h2 className="text-3xl font-semibold text-pink-600 border-b-2 border-pink-300 pb-2 flex items-center gap-2">
+            <h2 className="text-3xl font-semibold text-black border-b-2 border-pink-300 pb-2 flex items-center gap-2">
               <MdBook /> Selected Publications
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               {profile && profile.selected_publications && profile.selected_publications.length > 0 ? (
                 profile.selected_publications.map((publication, idx) => (
                   <div key={idx} className="bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                    <h3 className="text-xl font-bold text-pink-600">{publication.title}</h3>
-                    <p className="text-pink-600">{publication.description}</p>
+                    <h3 className="text-xl font-bold text-black">{publication.title}</h3>
+                    <p className="text-black">{publication.description}</p>
                   </div>
                 ))
               ) : (
@@ -184,15 +191,15 @@ export default function ExpertProfilePage({ params }: { params: { id: string } }
 
           {/* Awards */}
           <div className="mt-8">
-            <h2 className="text-3xl font-semibold text-pink-600 border-b-2 border-pink-300 pb-2 flex items-center gap-2">
+            <h2 className="text-3xl font-semibold text-black border-b-2 border-pink-300 pb-2 flex items-center gap-2">
               <MdEmojiEvents /> Awards
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               {profile && profile.awards && profile.awards.length > 0 ? (
                 profile.awards.map((award, idx) => (
                   <div key={idx} className="bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                    <h3 className="text-xl font-bold text-pink-600">Award {idx + 1}</h3>
-                    <p className="text-pink-600">{award.content}</p>
+                    <h3 className="text-xl font-bold text-black">Award {idx + 1}</h3>
+                    <p className="text-black">{award.content}</p>
                   </div>
                 ))
               ) : (
@@ -203,15 +210,15 @@ export default function ExpertProfilePage({ params }: { params: { id: string } }
 
           {/* News */}
           <div className="mt-8">
-            <h2 className="text-3xl font-semibold text-pink-600 border-b-2 border-pink-300 pb-2 flex items-center gap-2">
+            <h2 className="text-3xl font-semibold text-black border-b-2 border-pink-300 pb-2 flex items-center gap-2">
               <MdAnnouncement /> News
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               {profile && profile.news && profile.news.length > 0 ? (
                 profile.news.map((newsItem, idx) => (
                   <div key={idx} className="bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                    <h3 className="text-xl font-bold text-pink-600">News {idx + 1}</h3>
-                    <p className="text-pink-600">{newsItem.content}</p>
+                    <h3 className="text-xl font-bold text-black">News {idx + 1}</h3>
+                    <p className="text-black">{newsItem.content}</p>
                   </div>
                 ))
               ) : (

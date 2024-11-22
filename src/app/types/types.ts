@@ -44,6 +44,9 @@ export interface Expertise {
     instagram: string;
     twitter: string;
     status: string;
+    google_scholar: string;
+    orchid: string;
+    the_conversation: string;
   }
   
   
