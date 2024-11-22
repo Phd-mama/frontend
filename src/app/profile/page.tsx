@@ -11,9 +11,10 @@ import PublicationsForm from "../components/Forms/PublicationsForm";
 import AwardsForm from "../components/Forms/AwardsForm";
 import NewsForm from "../components/Forms/NewsForm";
 import SocialMediaForm from "../components/Forms/SocialMediaForm";
-import BioForm from "../components/Forms/BioForm"; 
+import BioForm from "../components/Forms/BioForm";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { AiFillCheckCircle, AiFillExclamationCircle } from "react-icons/ai";
 
 const ProfilePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState("Short Information");
@@ -60,11 +61,11 @@ const ProfilePage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("FormData before submit:", formData); 
+    console.log("FormData before submit:", formData);
     try {
       const token = localStorage.getItem("token");
       const userId = localStorage.getItem("user_id");
-  
+
       const response = await fetch(`https://puanpakar.cs.ui.ac.id/api/experts/${userId}/`, {
         method: "PUT",
         headers: {
@@ -73,12 +74,12 @@ const ProfilePage: React.FC = () => {
         },
         body: JSON.stringify(formData),
       });
-  
+
       if (response.ok) {
         const updatedProfile = await response.json();
         setProfile(updatedProfile);
         toast.success("Profile updated successfully");
-  
+
         setTimeout(() => {
           window.location.reload();
         }, 2000);
@@ -92,7 +93,7 @@ const ProfilePage: React.FC = () => {
       toast.error("Error updating profile");
     }
   };
-  
+
   const renderTabContent = () => {
     switch (activeTab) {
       case "Short Information":
@@ -130,10 +131,25 @@ const ProfilePage: React.FC = () => {
       <ToastContainer />
       <div className="container mx-auto p-4">
         <h2 className="text-3xl font-bold mb-6 text-center text-pink-600">Edit Profile</h2>
+        {profile?.status && (
+          <div className="flex justify-center items-center mb-4">
+            {profile.status === "Confirmed" ? (
+              <div className="flex items-center space-x-2 text-green-600">
+                <AiFillCheckCircle className="text-xl" />
+                <span>Profile Verified</span>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2 text-yellow-600">
+                <AiFillExclamationCircle className="text-xl" />
+                <span>Verification Pending</span>
+              </div>
+            )}
+          </div>
+        )}
         <div className="flex justify-center mb-4 space-x-2">
           {[
             "Short Information",
-            "Bio", 
+            "Bio",
             "Expertise",
             "Projects",
             "Publications",
@@ -143,7 +159,9 @@ const ProfilePage: React.FC = () => {
           ].map((tab) => (
             <button
               key={tab}
-              className={`px-3 py-1 text-sm rounded ${activeTab === tab ? "bg-pink-600 text-white" : "bg-gray-200 text-gray-700"}`}
+              className={`px-3 py-1 text-sm rounded ${
+                activeTab === tab ? "bg-pink-600 text-white" : "bg-gray-200 text-gray-700"
+              }`}
               onClick={() => setActiveTab(tab)}
             >
               {tab}
