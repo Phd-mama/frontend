@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import { Profile } from "../types/types";
@@ -11,6 +11,7 @@ import PublicationsForm from "../components/Forms/PublicationsForm";
 import AwardsForm from "../components/Forms/AwardsForm";
 import NewsForm from "../components/Forms/NewsForm";
 import SocialMediaForm from "../components/Forms/SocialMediaForm";
+import BioForm from "../components/Forms/BioForm"; 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -96,6 +97,8 @@ const ProfilePage: React.FC = () => {
     switch (activeTab) {
       case "Short Information":
         return <ShortInformationForm formData={formData} setFormData={setFormData} />;
+      case "Bio":
+        return <BioForm formData={formData} setFormData={setFormData} />;
       case "Expertise":
         return <ExpertiseForm formData={formData} setFormData={setFormData} />;
       case "Projects":
@@ -128,7 +131,16 @@ const ProfilePage: React.FC = () => {
       <div className="container mx-auto p-4">
         <h2 className="text-3xl font-bold mb-6 text-center text-pink-600">Edit Profile</h2>
         <div className="flex justify-center mb-4 space-x-2">
-          {["Short Information", "Expertise", "Projects", "Publications", "Awards", "News", "Social Media"].map((tab) => (
+          {[
+            "Short Information",
+            "Bio", 
+            "Expertise",
+            "Projects",
+            "Publications",
+            "Awards",
+            "News",
+            "Social Media",
+          ].map((tab) => (
             <button
               key={tab}
               className={`px-3 py-1 text-sm rounded ${activeTab === tab ? "bg-pink-600 text-white" : "bg-gray-200 text-gray-700"}`}

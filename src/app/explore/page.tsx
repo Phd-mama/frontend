@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 import { useEffect, useState } from "react";
 import { Profile } from "../types/types"; 
 import Card from "../components/Card";
-import { FaSearch, FaExclamationCircle } from 'react-icons/fa';
+import { FaSearch, FaExclamationCircle, FaUndo } from "react-icons/fa";
 
 const ExplorePage: React.FC = () => {
   const [experts, setExperts] = useState<Profile[]>([]);
@@ -13,9 +13,11 @@ const ExplorePage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+
   const [selectedCountry, setSelectedCountry] = useState<string>("");
   const [selectedExpertise, setSelectedExpertise] = useState<string>("");
   const [searchName, setSearchName] = useState<string>("");
+
   const pageSize = 9;
 
   const fetchExperts = async () => {
@@ -32,19 +34,16 @@ const ExplorePage: React.FC = () => {
       setLoading(false);
     }
   };
-  
 
   useEffect(() => {
     fetchExperts();
   }, []);
 
-  const handleFilter = async () => {
+  const handleFilter = () => {
     setSearching(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
     const filtered = experts.filter((expert) =>
       (selectedCountry ? expert.location?.includes(selectedCountry) : true) &&
-      (selectedExpertise ? expert.expertise?.some(e => e.name === selectedExpertise) : true) &&
+      (selectedExpertise ? expert.expertise?.some((e) => e.name === selectedExpertise) : true) &&
       (searchName ? expert.name.toLowerCase().includes(searchName.toLowerCase()) : true)
     );
     setFilteredExperts(filtered);
@@ -52,11 +51,24 @@ const ExplorePage: React.FC = () => {
     setSearching(false);
   };
 
+  const handleResetFilter = () => {
+    setSelectedCountry("");
+    setSelectedExpertise("");
+    setSearchName("");
+    setFilteredExperts(experts);
+    setCurrentPage(1);
+  };
+
   const handleNextPage = () => setCurrentPage((prev) => prev + 1);
   const handlePreviousPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
-  const uniqueCountries = Array.from(new Set(experts.map((expert) => expert.location)));
-  const uniqueExpertise = Array.from(new Set(experts.flatMap((expert) => expert.expertise)));
+  const uniqueCountries = Array.from(
+    new Set(experts.map((expert) => expert.location).filter(Boolean))
+  ).sort((a, b) => a.localeCompare(b)); 
+
+  const uniqueExpertise = Array.from(
+    new Set(experts.flatMap((expert) => expert.expertise.map((e) => e.name)).filter(Boolean))
+  ).sort((a, b) => a.localeCompare(b)); 
 
   const paginatedExperts = filteredExperts.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
@@ -85,7 +97,10 @@ const ExplorePage: React.FC = () => {
             />
             <select
               value={selectedCountry}
-              onChange={(e) => setSelectedCountry(e.target.value)}
+              onChange={(e) => {
+                setSelectedCountry(e.target.value);
+                handleFilter();
+              }}
               className="px-4 py-2 border rounded-lg bg-white text-gray-700"
             >
               <option value="">Select Country</option>
@@ -95,12 +110,15 @@ const ExplorePage: React.FC = () => {
             </select>
             <select
               value={selectedExpertise}
-              onChange={(e) => setSelectedExpertise(e.target.value)}
+              onChange={(e) => {
+                setSelectedExpertise(e.target.value);
+                handleFilter();
+              }}
               className="px-4 py-2 border rounded-lg bg-white text-gray-700"
             >
               <option value="">Select Expertise</option>
               {uniqueExpertise.map((expertise) => (
-                <option key={expertise.id} value={expertise.name}>{expertise.name}</option>
+                <option key={expertise} value={expertise}>{expertise}</option>
               ))}
             </select>
             <button
@@ -108,6 +126,12 @@ const ExplorePage: React.FC = () => {
               className="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-all flex items-center space-x-2"
             >
               <FaSearch /> <span>Search</span>
+            </button>
+            <button
+              onClick={handleResetFilter}
+              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all flex items-center space-x-2"
+            >
+              <FaUndo /> <span>Reset</span>
             </button>
           </div>
 
@@ -120,32 +144,32 @@ const ExplorePage: React.FC = () => {
             <div>
               {/* Experts Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {paginatedExperts.map((expert) => (
-                <Card key={expert.user} expert={expert} /> 
-              ))}
+                {paginatedExperts.map((expert) => (
+                  <Card key={expert.user} expert={expert} /> 
+                ))}
               </div>
 
               {/* Pagination Controls */}
               <div className="pagination-controls flex justify-center mt-8 space-x-4">
-              <button
-                onClick={handlePreviousPage}
-                className={`px-6 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-all ${
-                currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </button>
-              <span className="text-gray-700 text-lg font-semibold mt-1">{`Page ${currentPage}`}</span>
-              <button
-                onClick={handleNextPage}
-                className={`px-6 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-all ${
-                currentPage * pageSize >= filteredExperts.length ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-                disabled={currentPage * pageSize >= filteredExperts.length}
-              >
-                Next
-              </button>
+                <button
+                  onClick={handlePreviousPage}
+                  className={`px-6 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-all ${
+                    currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </button>
+                <span className="text-gray-700 text-lg font-semibold mt-1">{`Page ${currentPage}`}</span>
+                <button
+                  onClick={handleNextPage}
+                  className={`px-6 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-all ${
+                    currentPage * pageSize >= filteredExperts.length ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                  disabled={currentPage * pageSize >= filteredExperts.length}
+                >
+                  Next
+                </button>
               </div>
             </div>
           ) : (
