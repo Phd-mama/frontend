@@ -10,7 +10,7 @@ const BioForm: React.FC<FormProps> = ({ formData, setFormData }) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: value, 
     });
   };
 
@@ -22,7 +22,7 @@ const BioForm: React.FC<FormProps> = ({ formData, setFormData }) => {
           <FaInfoCircle className="mr-2" /> Bio:
         </label>
         <textarea
-          name="bio"
+          name="short_bio" 
           value={formData.short_bio || ""}
           onChange={handleInputChange}
           className="w-full p-2 mb-4 border border-black rounded-lg shadow-inner"

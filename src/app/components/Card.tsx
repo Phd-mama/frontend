@@ -2,6 +2,7 @@ import { FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { BiUserCircle } from "react-icons/bi";
 import Image from "next/image";
 import Link from "next/link";
+import ConversationLogo from "../public/assets/images/the_conversations.png";
 import { Profile } from "../types/types";
 
 interface CardProps {
@@ -30,7 +31,7 @@ const Card: React.FC<CardProps> = ({ expert }) => {
             {expert.expertise?.slice(0, 3).map((exp, index) => (
               <span
                 key={index}
-                className="inline-block bg-pink-200 text-pink-800 px-3 py-1 rounded-full text-xs font-semibold shadow-md whitespace-nowrap"
+                className="inline-block bg-pink-200 text-black px-3 py-1 rounded-full text-xs font-semibold shadow-md whitespace-nowrap"
               >
                 {exp.name}
               </span>
@@ -43,21 +44,26 @@ const Card: React.FC<CardProps> = ({ expert }) => {
         </p>
 
         <div className="flex justify-center space-x-6 mt-6">
-          {expert.instagram && (
-            <a href={expert.instagram} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-pink-500 text-xl">
+            {expert.instagram && (
+            <a href={expert.instagram} target="_blank" rel="noopener noreferrer" className="text-pink-500 hover:text-gray-500 text-xl">
               <FaInstagram />
             </a>
-          )}
-          {expert.linkedin && (
-            <a href={expert.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-700 text-xl">
+            )}
+            {expert.linkedin && (
+            <a href={expert.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-gray-500 text-xl">
               <FaLinkedin />
             </a>
-          )}
-          {expert.twitter && (
-            <a href={expert.twitter} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-500 text-xl">
+            )}
+            {expert.twitter && (
+            <a href={expert.twitter} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-gray-500 text-xl">
               <FaTwitter />
             </a>
-          )}
+            )}
+            {expert.the_conversation && (
+            <a href={expert.the_conversation} target="_blank" rel="noopener noreferrer" className="text-red-500 hover:text-gray-500 text-xl flex items-center" onClick={(e) => e.stopPropagation()}>
+              <Image src={ConversationLogo} alt="The Conversation Indonesia" width={22} height={24} />
+            </a>
+            )}
         </div>
       </div>
     </Link>
