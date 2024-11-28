@@ -84,6 +84,9 @@ const LoginPage: React.FC = () => {
             <a href="/register" className="text-sm text-pink-700">
               Sign Up
             </a>
+            <a href="/ForgotPassword" className="text-sm text-pink-700">
+              Forgot Password
+            </a>
           </div>
         </form>
       </div>
