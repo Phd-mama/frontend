@@ -26,6 +26,9 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_RECAPTCHA_SITE_KEY: ${{ secrets.NEXT_PUBLIC_RECAPTCHA_SITE_KEY }}
         run: npm install
         
       # Set up Java 17 (for SonarQube Scanner)
@@ -34,8 +37,13 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+
       # Run SonarCloud Scan
       - name: Run SonarCloud Scan
+        env:
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+          SONAR_ORG: ${{ secrets.SONAR_ORG }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           npm install -g sonar-scanner
           sonar-scanner \
@@ -64,6 +72,8 @@ jobs:
           cd frontend
           git pull
           npm install
+          NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }} \
+          NEXT_PUBLIC_RECAPTCHA_SITE_KEY=${{ secrets.NEXT_PUBLIC_RECAPTCHA_SITE_KEY }} \
           npm run build
           pm2 restart frontend
           VM_EOF
@@ -78,4 +88,5 @@ jobs:
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
           NEXT_PUBLIC_RECAPTCHA_SITE_KEY: ${{ secrets.NEXT_PUBLIC_RECAPTCHA_SITE_KEY }}
-        run: npm run build
+        run: |
+          npm run build || (echo "Build failed, debugging..."; ls -lah .next; exit 1)
