@@ -36,7 +36,7 @@ const RegisterPage: React.FC = () => {
       toast.error("Passwords do not match!");
       return false;
     }
-    if (!recaptchaValue) {
+    if (!recaptchaValue) { // Uncomment for local development
       toast.error("Please complete the reCAPTCHA verification!");
       return false;
     }
