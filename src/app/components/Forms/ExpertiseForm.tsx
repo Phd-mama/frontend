@@ -36,7 +36,9 @@ const ExpertiseForm: React.FC<FormProps> = ({ formData, setFormData }) => {
                 onChange={(e) => handleNestedInputChange(index, e.target.value)}
                 className="p-2 border border-black rounded-lg w-full shadow-inner"
               />
-              <button onClick={() => handleDeleteExpertise(index)} className="hover:text-pink-600">
+              <button 
+                type="button" 
+                onClick={() => handleDeleteExpertise(index)} className="hover:text-pink-600">
                 <FaTrash className="text-pink-600" />
               </button>
             </li>

@@ -6,20 +6,25 @@ interface FormProps {
 }
 
 const PublicationsForm: React.FC<FormProps> = ({ formData, setFormData }) => {
-  const handleNestedInputChange = (index: number, subField: string, value: string) => {
+  const handleInputChange = (index: number, value: string) => {
     const updatedPublications = [...(formData.selected_publications || [])];
-    updatedPublications[index] = { ...updatedPublications[index], [subField]: value };
+    updatedPublications[index] = { name: value };
     setFormData({ ...formData, selected_publications: updatedPublications });
   };
 
   const handleAddPublication = () => {
-    setFormData({ ...formData, selected_publications: [...(formData.selected_publications || []), { title: "", description: "" }] });
+    setFormData({
+      ...formData,
+      selected_publications: [...(formData.selected_publications || []), { name: "" }],
+    });
   };
 
   const handleDeletePublication = (index: number) => {
     setFormData({
       ...formData,
-      selected_publications: (formData.selected_publications || []).filter((_: any, i: number) => i !== index),
+      selected_publications: (formData.selected_publications || []).filter(
+        (_: any, i: number) => i !== index
+      ),
     });
   };
 
@@ -29,23 +34,22 @@ const PublicationsForm: React.FC<FormProps> = ({ formData, setFormData }) => {
       <ul>
         {formData.selected_publications && formData.selected_publications.length > 0 ? (
           formData.selected_publications.map((publication: any, index: number) => (
-            <li key={index} className="flex flex-col space-y-2 mb-4 border border-pink-600 p-2 rounded-lg">
-              <label className="text-pink-600 font-semibold">Publication Title:</label>
+            <li
+              key={index}
+              className="flex items-center space-x-2 mb-4 border border-pink-600 p-2 rounded-lg"
+            >
               <input
                 type="text"
-                placeholder="Publication Title"
-                value={publication.title || ""}
-                onChange={(e) => handleNestedInputChange(index, "title", e.target.value)}
+                placeholder="Publication Name"
+                value={publication.name || ""}
+                onChange={(e) => handleInputChange(index, e.target.value)}
                 className="p-2 border border-black rounded-lg w-full shadow-inner"
               />
-              <label className="text-pink-600 font-semibold">Publication Description:</label>
-              <textarea
-                placeholder="Publication Description"
-                value={publication.description || ""}
-                onChange={(e) => handleNestedInputChange(index, "description", e.target.value)}
-                className="p-2 border border-black rounded-lg w-full shadow-inner"
-              />
-              <button onClick={() => handleDeletePublication(index)} className="self-start hover:text-pink-600">
+              <button
+                type="button" 
+                onClick={() => handleDeletePublication(index)}
+                className="hover:text-pink-600"
+              >
                 <FaTrash className="text-pink-600" />
               </button>
             </li>
@@ -54,7 +58,11 @@ const PublicationsForm: React.FC<FormProps> = ({ formData, setFormData }) => {
           <li className="text-gray-500">No publications available</li>
         )}
       </ul>
-      <button type="button" onClick={handleAddPublication} className="text-pink-600 flex items-center space-x-2 mt-2">
+      <button
+        type="button"
+        onClick={handleAddPublication}
+        className="text-pink-600 flex items-center space-x-2 mt-2"
+      >
         <FaPlus /> <span>Add Publication</span>
       </button>
     </div>
