@@ -35,18 +35,11 @@ const LandingPage: React.FC = () => {
   return (
     <div className="bg-white text-black min-h-screen font-sans">
       <Navbar />
-      <header className="bg-pink-500 py-20 text-center">
-        <h1 className="text-3xl font-bold text-white">
-          EMPOWERING KNOWLEDGE. CONNECTING EXPERTS
-        </h1>
-        <div className="mt-8">
-          <button
-            className="bg-white text-pink-500 text-md py-2 px-4 rounded-2xl hover:bg-pink-200 mx-2"
-            onClick={handleJoinNow}
-          >
-            JOIN US
-          </button>
-        </div>
+      <header className="bg-gradient-to-br from-pink-500 to-purple-500 text-white py-16 px-6 text-center">
+        <h1 className="text-4xl font-bold mb-4">Explore Indonesia's PhD Experts</h1>
+        <p className="text-lg font-medium">
+          Connect with leading women experts across diverse fields.
+        </p>
       </header>
 
       <section className="bg-gray-100 py-20 px-4 lg:px-20"> 

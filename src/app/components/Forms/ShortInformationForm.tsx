@@ -1,6 +1,4 @@
 import { FaUniversity, FaLocationArrow, FaBriefcase, FaEnvelope } from "react-icons/fa";
-import { BiUserCircle } from "react-icons/bi";
-import { useState } from "react";
 
 interface FormProps {
   formData: any;
@@ -8,8 +6,6 @@ interface FormProps {
 }
 
 const ShortInformationForm: React.FC<FormProps> = ({ formData, setFormData }) => {
-  const [avatar, setAvatar] = useState<string | null>(formData.avatar || null);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({
@@ -18,37 +14,9 @@ const ShortInformationForm: React.FC<FormProps> = ({ formData, setFormData }) =>
     });
   };
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result as string;
-        setAvatar(base64String);
-        setFormData({
-          ...formData,
-          avatar: base64String,
-        });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   return (
     <div className="mt-6 p-4 bg-white shadow-xl rounded-xl border border-black">
       <h3 className="text-2xl font-bold mb-4 text-pink-600">Short Information</h3>
-      <div className="flex flex-col items-center mb-6">
-        {avatar ? (
-          <img src={avatar} alt="User Avatar" className="w-28 h-28 rounded-full object-cover mb-2" />
-        ) : (
-          <BiUserCircle className="w-28 h-28 text-gray-400 mb-2" />
-        )}
-        <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" id="avatarUpload" />
-        <label htmlFor="avatarUpload" className="text-pink-600 cursor-pointer underline">
-          Upload Image
-        </label>
-      </div>
-
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {/* Full Name & Title */}
         <div>
