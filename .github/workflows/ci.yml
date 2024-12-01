@@ -62,12 +62,15 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p ${{ secrets.KAWUNG_PORT }} ${{ secrets.KAWUNG_USERNAME }}@${{ secrets.KAWUNG_HOST }} << 'EOF'
           ssh admin@${{ secrets.VM_HOST }} << 'VM_EOF'
           cd frontend
+          git stash 
           git pull
           npm install
           npm run build
-          pm2 restart frontend
+          pm2 delete frontend
+          pm2 start npm --name "frontend" -- run start
           VM_EOF
           EOF
+        
         env:
           KAWUNG_USERNAME: ${{ secrets.KAWUNG_USERNAME }}
           KAWUNG_HOST: ${{ secrets.KAWUNG_HOST }}
