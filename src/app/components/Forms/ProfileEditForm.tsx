@@ -25,7 +25,7 @@ const ProfileEditForm: React.FC<Props> = ({ userId, onClose, onReload }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/api/experts/${userId}/`);
+        const response = await fetch(`https://puanpakar.cs.ui.ac.id/api/experts/${userId}/`);
         const data = await response.json();
         setFormData(data);
       } catch (error) {
@@ -44,7 +44,7 @@ const ProfileEditForm: React.FC<Props> = ({ userId, onClose, onReload }) => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:8000/api/experts/${userId}/`, {
+      const response = await fetch(`https://puanpakar.cs.ui.ac.id/api/experts/${userId}/`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
