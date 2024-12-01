@@ -1,10 +1,21 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const ResetPassword = () => {
+const LoadingSpinner = () => {
+    return (
+        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+            <div className="flex flex-col items-center">
+                <div className="w-16 h-16 border-4 border-pink-600 border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-pink-700 mt-4 text-lg font-semibold">Loading...</p>
+            </div>
+        </div>
+    );
+};
+
+const ResetPasswordContent = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [token, setToken] = useState("");
@@ -94,5 +105,11 @@ const ResetPassword = () => {
         </div>
     );
 };
+
+const ResetPassword = () => (
+    <Suspense fallback={<LoadingSpinner />}>
+        <ResetPasswordContent />
+    </Suspense>
+);
 
 export default ResetPassword;
