@@ -66,8 +66,7 @@ jobs:
           git pull
           npm install
           npm run build
-          pm2 delete frontend
-          pm2 start npm --name "frontend" -- run start
+          pm2 frontend
           VM_EOF
           EOF
         
