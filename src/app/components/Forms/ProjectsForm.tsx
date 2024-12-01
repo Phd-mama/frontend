@@ -6,20 +6,25 @@ interface FormProps {
 }
 
 const ProjectsForm: React.FC<FormProps> = ({ formData, setFormData }) => {
-  const handleNestedInputChange = (index: number, subField: string, value: string) => {
+  const handleInputChange = (index: number, value: string) => {
     const updatedProjects = [...(formData.selected_projects || [])];
-    updatedProjects[index] = { ...updatedProjects[index], [subField]: value };
+    updatedProjects[index] = { name: value };
     setFormData({ ...formData, selected_projects: updatedProjects });
   };
 
   const handleAddProject = () => {
-    setFormData({ ...formData, selected_projects: [...(formData.selected_projects || []), { title: "", description: "" }] });
+    setFormData({
+      ...formData,
+      selected_projects: [...(formData.selected_projects || []), { name: "" }],
+    });
   };
 
   const handleDeleteProject = (index: number) => {
     setFormData({
       ...formData,
-      selected_projects: (formData.selected_projects || []).filter((_: any, i: number) => i !== index),
+      selected_projects: (formData.selected_projects || []).filter(
+        (_: any, i: number) => i !== index
+      ),
     });
   };
 
@@ -29,23 +34,20 @@ const ProjectsForm: React.FC<FormProps> = ({ formData, setFormData }) => {
       <ul>
         {formData.selected_projects && formData.selected_projects.length > 0 ? (
           formData.selected_projects.map((project: any, index: number) => (
-            <li key={index} className="flex flex-col space-y-2 mb-4 border border-pink-600 p-2 rounded-lg">
-              <label className="text-pink-600 font-semibold">Project Title:</label>
+            <li
+              key={index}
+              className="flex items-center space-x-2 mb-4 border border-pink-600 p-2 rounded-lg"
+            >
               <input
                 type="text"
-                placeholder="Project Title"
-                value={project.title || ""}
-                onChange={(e) => handleNestedInputChange(index, "title", e.target.value)}
+                placeholder="Project Name"
+                value={project.name || ""}
+                onChange={(e) => handleInputChange(index, e.target.value)}
                 className="p-2 border border-black rounded-lg w-full shadow-inner"
               />
-              <label className="text-pink-600 font-semibold">Project Description:</label>
-              <textarea
-                placeholder="Project Description"
-                value={project.description || ""}
-                onChange={(e) => handleNestedInputChange(index, "description", e.target.value)}
-                className="p-2 border border-black rounded-lg w-full shadow-inner"
-              />
-              <button onClick={() => handleDeleteProject(index)} className="self-start hover:text-pink-600">
+              <button                 
+                type="button"
+                onClick={() => handleDeleteProject(index)} className="hover:text-pink-600">
                 <FaTrash className="text-pink-600" />
               </button>
             </li>
@@ -54,7 +56,11 @@ const ProjectsForm: React.FC<FormProps> = ({ formData, setFormData }) => {
           <li className="text-gray-500">No projects available</li>
         )}
       </ul>
-      <button type="button" onClick={handleAddProject} className="text-pink-600 flex items-center space-x-2 mt-2">
+      <button
+        type="button"
+        onClick={handleAddProject}
+        className="text-pink-600 flex items-center space-x-2 mt-2"
+      >
         <FaPlus /> <span>Add Project</span>
       </button>
     </div>
