@@ -1,11 +1,14 @@
 "use client";
 
+import Autocomplete from "../components/Autocomplete"; 
+import { Modal, ModalHeader, ModalBody, ModalFooter } from "../components/Modal";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { useEffect, useState } from "react";
 import { Profile } from "../types/types";
 import Card from "../components/Card";
 import { FaSearch, FaUndo } from "react-icons/fa";
+
 
 const ExplorePage: React.FC = () => {
   const [experts, setExperts] = useState<Profile[]>([]);
@@ -88,44 +91,43 @@ const ExplorePage: React.FC = () => {
         </h2>
 
         {/* Filter Controls */}
+        {/* Name search */}
         <div className="flex flex-wrap justify-center gap-4 mb-8">
-          <input
-            type="text"
-            placeholder="Search by Name"
+          <Autocomplete
+            options={experts.map(expert => expert.name)}
             value={searchName}
-            onChange={(e) => setSearchName(e.target.value)}
-            className="px-4 py-2 border rounded-lg bg-white text-gray-700 shadow-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+            onChange={(value) => {
+              setSearchName(value);
+            }}
+            placeholder="Search by Name"
+            className="w-full max-w-xs"
+            disableSeeAll={true}
           />
-          <select
+
+          {/* Country Dropdown with Search */}
+          <Autocomplete
+            options={uniqueCountries}
             value={selectedCountry}
-            onChange={(e) => {
-              setSelectedCountry(e.target.value);
-              handleFilter();
+            onChange={(value) => {
+              setSelectedCountry(value);
             }}
-            className="px-4 py-2 border rounded-lg bg-white text-gray-700 shadow-md focus:outline-none focus:ring-2 focus:ring-pink-400"
-          >
-            <option value="">Select Country</option>
-            {uniqueCountries.map((country) => (
-              <option key={country} value={country}>
-                {country}
-              </option>
-            ))}
-          </select>
-          <select
+            placeholder="Select Country"
+            className="w-full max-w-xs"
+            type="select"
+          />
+          
+          {/* Expertise Dropdown with Search */}
+          <Autocomplete
+            options={uniqueExpertise}
             value={selectedExpertise}
-            onChange={(e) => {
-              setSelectedExpertise(e.target.value);
-              handleFilter();
+            onChange={(value) => {
+              setSelectedExpertise(value);
             }}
-            className="px-4 py-2 border rounded-lg bg-white text-gray-700 shadow-md focus:outline-none focus:ring-2 focus:ring-pink-400"
-          >
-            <option value="">Select Expertise</option>
-            {uniqueExpertise.map((expertise) => (
-              <option key={expertise} value={expertise}>
-                {expertise}
-              </option>
-            ))}
-          </select>
+            placeholder="Select Expertise"
+            className="w-full max-w-xs"
+            type="select"
+          />
+
           <button
             onClick={handleFilter}
             className="px-4 py-2 bg-pink-500 text-white rounded-lg shadow-md hover:bg-pink-600 transition-all flex items-center space-x-2 focus:ring-2 focus:ring-pink-400"
