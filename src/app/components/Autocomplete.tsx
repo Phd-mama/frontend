@@ -12,6 +12,7 @@ interface AutocompleteProps {
   maxVisibleOptions?: number;
   disableSeeAll?: boolean;
   expertCounts?: Record<string, number>;
+  
 }
 
 const Autocomplete: React.FC<AutocompleteProps> = ({
@@ -30,7 +31,8 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   const [showAllModal, setShowAllModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isFocused, setIsFocused] = useState(false);
+  const [inputValue, setInputValue] = useState(value); // Unified state for input and search term
+
   
   
   // Reset filtered options when options prop changes
@@ -42,44 +44,18 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
     const cleanedInput = inputValue;
     setSearchTerm(cleanedInput);
   
-    if (type === 'input') {
-      onChange(cleanedInput);
-    }
-    
-    const filtered = options
-      .filter(option => {
-        if (!cleanedInput) return true;
-        
-        const lowerOption = option.toLowerCase();
-        const lowerInput = cleanedInput.toLowerCase();
-        
-        return lowerOption.includes(lowerInput);
-      });
-    
-    const filteredSlice = filtered.slice(0, maxVisibleOptions);
-    
-    // Only open dropdown if there are filtered options
-    if (filteredSlice.length > 0) {
-      setFilteredOptions(filteredSlice);
+        // Filter options based on input
+        const filtered = options
+        .filter(option => 
+          !inputValue || 
+          option.toLowerCase().includes(inputValue.toLowerCase())
+        )
+        .slice(0, maxVisibleOptions);
+      
+      // Update filtered options
+      setFilteredOptions(filtered);
+      // Ensure dropdown stays open
       setIsOpen(true);
-    } else {
-      // If no options match, close the dropdown
-      setIsOpen(false);
-    }
-  };
-
-  // Explicit method to manage dropdown visibility
-  const manageFocus = () => {
-    const filtered = options
-      .filter(option => 
-        option.toLowerCase().includes(value.toLowerCase())
-      );
-    
-    // Only open if there are filtered options
-    if (filtered.length > 0) {
-      setFilteredOptions(filtered.slice(0, maxVisibleOptions));
-      setIsOpen(true);
-    }
   };
 
   // Handle option selection
@@ -93,15 +69,12 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
 
   // Toggle dropdown for select-like input
   const handleDropdownToggle = () => {
-    if (type === 'select') {
-      // For select type, toggle open/closed
-      setIsOpen(prev => !prev);
+    setIsOpen(prev => !prev);
       
-      // Always reset to full options when opening
-      if (!isOpen) {
-        setFilteredOptions(options.slice(0, maxVisibleOptions));
-        setSearchTerm('');
-      }
+    // Always reset to full options when opening
+    if (!isOpen) {
+      setFilteredOptions(options.slice(0, maxVisibleOptions));
+      setSearchTerm('');
     }
   };
 
@@ -153,29 +126,17 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
         {type === 'input' ? (
           <input
             type="text"
-            value={displayValue}
+            placeholder="Search..."
+            value={searchTerm}
             onChange={(e) => handleInputChange(e.target.value)}
-            placeholder={placeholder}
             className="w-full px-4 py-2 border rounded-lg bg-white text-gray-700 shadow-md focus:outline-none focus:ring-2 focus:ring-pink-400 pr-10"
             onFocus={() => {
-              setIsFocused(true);
-              // Ensure dropdown opens with existing input or shows full options
-              const filtered = options
-                .filter(option => 
-                  !value || option.toLowerCase().includes(value.toLowerCase())
-                );
-              
-              if (filtered.length > 0) {
-                setFilteredOptions(filtered.slice(0, maxVisibleOptions));
-                setIsOpen(true);
-              }
-            }}
-            onBlur={() => {
-              // Slight delay to handle option selection
-              setTimeout(() => {
-                setIsFocused(false);
-                setIsOpen(false);
-              }, 200);
+              // Filter options based on current search term when focusing
+              const filtered = options.filter(option => 
+                !searchTerm || option.toLowerCase().includes(searchTerm.toLowerCase())
+              );
+              setFilteredOptions(filtered.slice(0, maxVisibleOptions));
+              setIsOpen(true);
             }}
           />
         ) : (
@@ -205,7 +166,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
         )}
       </div>
 
-      {(isOpen || isFocused) && filteredOptions.length > 0 && (
+      {isOpen && (
         <div className="absolute z-10 w-full bg-white border rounded-lg shadow-lg mt-1 max-h-60 overflow-y-auto">
           {type === 'select' && (
             <input
@@ -237,8 +198,9 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
               <li className="px-4 py-2 text-gray-500 text-center">
                 No options found
               </li>
+              
             )}
-            {!disableSeeAll && options.length > maxVisibleOptions && (
+            {!disableSeeAll && options.length > maxVisibleOptions && filteredOptions.length > 0 && (
               <li
                 onClick={toggleSeeAllModal}
                 className="px-4 py-2 hover:bg-pink-100 cursor-pointer text-pink-700 flex items-center justify-center"

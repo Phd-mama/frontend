@@ -101,8 +101,9 @@ const ExplorePage: React.FC = () => {
             }}
             placeholder="Search by Name"
             className="w-full max-w-xs"
-            disableSeeAll={true}
+            type="input"
           />
+
 
           {/* Country Dropdown with Search */}
           <Autocomplete
